@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>睿智校园 · Apple 风格 UI 预览</title>
+<style>
+:root{
+  --black:#000000; --white:#ffffff; --gray:#f5f5f7; --blue:#0071e3; --blue-hover:#0077ed;
+  --green:#34c759; --red:#ff3b30; --purple:#a13ff6; --text:#1d1d1f; --secondary:#86868b;
+  --line:#d2d2d7; --card:#ffffff; --card-radius:22px; --button-radius:999px; --input-radius:14px;
+  --shadow:0 8px 30px rgba(0,0,0,.08); --shadow-strong:0 20px 60px rgba(0,0,0,.18);
+}
+body[data-theme="dark"]{
+  --gray:#000000; --card:#1c1c1e; --text:#f5f5f7; --secondary:#a1a1a6; --line:#38383a;
+  --shadow:0 8px 30px rgba(0,0,0,.45); --shadow-strong:0 20px 60px rgba(0,0,0,.65);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--gray);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;transition:background .25s,color .25s}
+.page{max-width:1280px;margin:0 auto;padding:40px 24px 80px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:40px;line-height:1.08;letter-spacing:-.03em;margin:0 0 8px;font-weight:700}
+.sub{font-size:17px;color:var(--secondary);margin:0}
+.theme-btn{border:0;background:var(--card);color:var(--text);border-radius:999px;padding:10px 16px;font-size:14px;box-shadow:var(--shadow);cursor:pointer}
+.section{margin-top:48px}
+.section h2{font-size:24px;letter-spacing:-.02em;margin:0 0 16px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.swatch{height:92px;border-radius:18px;padding:14px;display:flex;align-items:flex-end;color:#fff;font-size:12px;font-weight:600;box-shadow:var(--shadow)}
+.phones{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.phone{width:340px;height:720px;border-radius:46px;background:#1d1d1f;padding:10px;box-shadow:var(--shadow-strong)}
+.screen{width:100%;height:100%;border-radius:38px;overflow:hidden;background:var(--gray);position:relative;display:flex;flex-direction:column}
+.statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px;font-weight:600;color:var(--text)}
+.statusbar .dots{letter-spacing:2px;font-size:10px}
+.screen-body{flex:1;overflow:auto;padding:0 20px 24px}
+.login{background:var(--white);text-align:center;padding-top:28px}
+body[data-theme="dark"] .login{background:var(--card)}
+.logo{width:76px;height:76px;border-radius:22px;margin:0 auto;background:linear-gradient(145deg,#0071e3,#005bb5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(0,113,227,.28)}
+.logo svg{width:38px;height:38px;fill:#fff}
+.login h3{font-size:30px;line-height:1.12;letter-spacing:-.03em;margin:18px 0 4px;color:var(--text)}
+.login p{font-size:15px;color:var(--secondary);margin:0 0 26px}
+.field{text-align:left;margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--secondary);margin:0 0 7px}
+.field input{width:100%;height:54px;border:0;border-radius:var(--input-radius);background:var(--gray);color:var(--text);padding:0 16px;font-size:16px;outline:none}
+body[data-theme="dark"] .field input{background:#2c2c2e}
+.code-row{display:flex;gap:10px}
+.code-row input{flex:1}
+.code-btn{border:0;border-radius:var(--input-radius);background:var(--blue);color:#fff;padding:0 16px;font-size:13px;font-weight:600;white-space:nowrap}
+.btn{width:100%;height:56px;border:0;border-radius:var(--button-radius);font-size:17px;font-weight:600;cursor:pointer;margin-top:12px}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.secondary{background:var(--gray);color:var(--text)}
+body[data-theme="dark"] .btn.secondary{background:#2c2c2e}
+.terms{font-size:12px;line-height:1.5;color:var(--secondary);margin-top:18px}
+.bath{background:var(--gray)}
+.appbar{display:flex;align-items:center;justify-content:space-between;padding:10px 0 16px}
+.appbar h3{font-size:28px;line-height:1.1;letter-spacing:-.03em;margin:0}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:0;background:var(--card);color:var(--blue);box-shadow:var(--shadow);font-size:18px}
+.card{background:var(--card);border-radius:var(--card-radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.account{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.account .label{font-size:12px;color:var(--secondary);margin-bottom:4px}
+.account .value{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.account .phone{font-size:13px;color:var(--secondary)}
+.device-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.device-name{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.device-sub{font-size:13px;color:var(--secondary);margin-top:4px}
+.chip{display:inline-flex;align-items:center;height:30px;border-radius:999px;padding:0 12px;font-size:12px;font-weight:700}
+.chip.green{background:rgba(52,199,89,.14);color:#248a3d}
+body[data-theme="dark"] .chip.green{background:rgba(52,199,89,.18);color:#5ee07a}
+.chip.blue{background:rgba(0,113,227,.12);color:var(--blue)}
+.chip.red{background:rgba(255,59,48,.12);color:var(--red)}
+.meta{display:flex;gap:18px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.meta div{flex:1}
+.meta .k{font-size:11px;color:var(--secondary);margin-bottom:3px}
+.meta .v{font-size:14px;font-weight:600}
+.control{position:absolute;left:0;right:0;bottom:0;padding:14px 18px 20px;background:linear-gradient(to top,var(--card),transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.control .btn{margin:0;box-shadow:0 12px 30px rgba(0,113,227,.28)}
+.control .btn.stop{background:var(--red);box-shadow:0 12px 30px rgba(255,59,48,.25)}
+.device-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.device-row:last-child{border-bottom:0}
+.device-avatar{width:44px;height:44px;border-radius:14px;background:rgba(0,113,227,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700}
+.device-row .t{font-size:16px;font-weight:600}
+.device-row .s{font-size:12px;color:var(--secondary);margin-top:2px}
+.device-row .m{font-size:12px;color:var(--secondary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin-top:2px}
+.type{display:grid;gap:10px}
+.type .t1{font-size:34px;font-weight:700;letter-spacing:-.03em}
+.type .t2{font-size:24px;font-weight:700;letter-spacing:-.02em}
+.type .t3{font-size:17px;font-weight:600}
+.type .t4{font-size:15px;color:var(--secondary)}
+.log{background:#0b0b0c;color:#7ee787;border-radius:16px;padding:14px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto;max-height:150px}
+</style>
+</head>
+<body data-theme="light">
+<div class="page">
+  <div class="top">
+    <div>
+      <h1>睿智校园 · Apple 风格 UI 预览</h1>
+      <p class="sub">基于你提供的 Apple Style Tokens：黑 / 白 / #0071e3 / #f5f5f7，SF Pro 字体栈，大圆角、轻阴影、胶囊按钮。</p>
+    </div>
+    <button class="theme-btn" onclick="document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark'">切换深色</button>
+  </div>
+
+  <div class="section">
+    <h2>颜色</h2>
+    <div class="swatches">
+      <div class="swatch" style="background:#000000">Primary #000000</div>
+      <div class="swatch" style="background:#f5f5f7;color:#1d1d1f">Secondary #f5f5f7</div>
+      <div class="swatch" style="background:#0071e3">Accent #0071e3</div>
+      <div class="swatch" style="background:#34c759">Success #34c759</div>
+      <div class="swatch" style="background:#ff3b30">Danger #ff3b30</div>
+      <div class="swatch" style="background:#a13ff6">Accent 2 #a13ff6</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>页面预览</h2>
+    <div class="phones">
+      <div class="phone">
+        <div class="screen login">
+          <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
+          <div class="screen-body">
+            <div class="logo">
+              <svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 9.4 5 14.2C5 18.1 8.1 21 12 21s7-2.9 7-6.8C19 9.4 12 2 12 2z"/></svg>
+            </div>
+            <h3>睿智校园</h3>
+            <p>公寓洗澡，清爽无打扰</p>
+            <div class="field">
+              <label>手机号</label>
+              <input value="138 0000 0000">
+            </div>
+            <div class="field">
+              <label>验证码</label>
+              <div class="code-row">
+                <input placeholder="请输入验证码">
+                <button class="code-btn">获取验证码</button>
+              </div>
+            </div>
+            <button class="btn primary">验证码登录</button>
+            <button class="btn secondary">密码登录</button>
+            <div class="terms">登录后仅访问校园账户和公寓热水服务</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone">
+        <div class="screen bath">
+          <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
+          <div class="screen-body">
+            <div class="appbar">
+              <h3>公寓洗澡</h3>
+              <button class="icon-btn">↻</button>
+            </div>
+            <div class="card account">
+              <div>
+                <div class="label">账户余额</div>
+                <div class="value">¥ 5.26</div>
+                <div class="phone">尾号 0000 · 账户 25468</div>
+              </div>
+              <span class="chip blue">已登录</span>
+            </div>
+            <div class="card">
+              <div class="device-head">
+                <div>
+                  <div class="device-name">宿舍 101</div>
+                  <div class="device-sub">KLCXKJ-Water</div>
+                </div>
+                <span class="chip green">空闲</span>
+              </div>
+              <div class="meta">
+                <div><div class="k">蓝牙</div><div class="v">已连接</div></div>
+                <div><div class="k">协议</div><div class="v">20</div></div>
+                <div><div class="k">编号</div><div class="v">1024</div></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="device-head">
+                <div>
+                  <div class="device-name">附近设备</div>
+                  <div class="device-sub">点击选择后连接</div>
+                </div>
+              </div>
+              <div class="device-row">
+                <div class="device-avatar">水</div>
+                <div style="flex:1">
+                  <div class="t">宿舍 101 · KLCXKJ-Water</div>
+                  <div class="s">-62 dBm · 已识别</div>
+                  <div class="m">AA:BB:CC:DD:EE:FF</div>
+                </div>
+                <span class="chip green">可连接</span>
+              </div>
+              <div class="device-row">
+                <div class="device-avatar" style="background:#f5f5f7;color:#86868b">?</div>
+                <div style="flex:1">
+                  <div class="t">未命名设备</div>
+                  <div class="s">-88 dBm</div>
+                  <div class="m">11:22:33:44:55:66</div>
+                </div>
+                <span class="chip blue">未知</span>
+              </div>
+            </div>
+          </div>
+          <div class="control">
+            <button class="btn primary">开始洗澡</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>文字系统</h2>
+    <div class="card type">
+      <div class="t1">大标题 34px / Bold</div>
+      <div class="t2">卡片标题 24px / Bold</div>
+      <div class="t3">正文强调 17px / Semibold</div>
+      <div class="t4">辅助说明 15px / Regular，颜色 #86868b</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>按钮</h2>
+    <div class="card">
+      <button class="btn primary" style="margin-top:0">开始洗澡</button>
+      <button class="btn secondary">连接设备</button>
+      <button class="btn" style="background:var(--red);color:#fff">停止并结算</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>设备列表项</h2>
+    <div class="card">
+      <div class="device-row">
+        <div class="device-avatar">水</div>
+        <div style="flex:1">
+          <div class="t">宿舍 101 · KLCXKJ-Water</div>
+          <div class="s">-62 dBm · 已识别</div>
+          <div class="m">AA:BB:CC:DD:EE:FF</div>
+        </div>
+        <span class="chip green">可连接</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>日志（仅调试）</h2>
+    <div class="log">[status] 已连接，正在确认设备状态…<br>回帧 cmd=0x23 payload=...</div>
+  </div>
+</div>
+</body>
+</html>
