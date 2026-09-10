@@ -284,6 +284,11 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         return deviceState == 1 && aid > 0 && deviceAccountId == aid
     }
 
+    private fun canSettleLeftoverData(): Boolean {
+        val aid = user?.accountId ?: 0
+        return deviceAccountId == 0 || (aid > 0 && deviceAccountId == aid)
+    }
+
     private fun operationLocksDevice(): Boolean =
         startRequestInFlight || stopRequestInFlight || settlementInFlight || rollbackInFlight || isOwnActiveSession()
 
@@ -1007,7 +1012,15 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         when (state) {
             0 -> setStatusText("空闲（可开始）")
             1 -> setStatusText(if (isOwnActiveSession()) "使用中" else "其他账户使用中")
-            3 -> confirmValveClosed(collect = true)
+            3 -> {
+                if (canSettleLeftoverData()) {
+                    confirmValveClosed(collect = true)
+                } else {
+                    setStatusText("设备有他人遗留数据，已停止操作")
+                    Logger.log("状态 3 属于其他账户 accountId=" + deviceAccountId + "，不自动结算")
+                    updateActionButtons()
+                }
+            }
             else -> setStatusText(stateText(state))
         }
         updateActionButtons()
@@ -1144,7 +1157,11 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         opHandler.removeCallbacksAndMessages(null)
         ApiClient.clearAuthInvalidListener(authInvalidListener)
         CmdServer.detach(this)
-        ble.listener = null
+        if (::ble.isInitialized) {
+            ble.stopScan()
+            ble.disconnect()
+            ble.listener = null
+        }
         super.onDestroy()
     }
 

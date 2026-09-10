@@ -21,28 +21,65 @@ object CmdServer {
         fun failDev(consumeDate: String)
     }
 
-    private var handler: Handler? = null
-    private var cmds: Commands? = null
+    @Volatile private var handler: Handler? = null
+    @Volatile private var cmds: Commands? = null
+    private var serverSocket: ServerSocket? = null
+    private var serverThread: Thread? = null
+    private val lock = Any()
 
     fun start(c: Commands) {
         cmds = c
         handler = Handler(Looper.getMainLooper())
-        Thread {
-            try {
-                val server = ServerSocket(8080, 1, InetAddress.getLoopbackAddress())
-                Logger.log("cmd server listening :8080")
-                while (true) {
-                    val sock = server.accept()
-                    Thread { handle(sock) }.start()
-                }
-            } catch (e: Exception) {
-                Logger.log("cmd server error: " + e.message)
+        synchronized(lock) {
+            val existing = serverSocket
+            if (existing != null && !existing.isClosed) {
+                Logger.log("cmd server already listening :8080")
+                return
             }
-        }.start()
+            val thread = Thread {
+                var running = false
+                try {
+                    val server = ServerSocket(8080, 1, InetAddress.getLoopbackAddress())
+                    synchronized(lock) { serverSocket = server }
+                    running = true
+                    Logger.log("cmd server listening :8080")
+                    while (!server.isClosed) {
+                        val sock = server.accept()
+                        Thread { handle(sock) }.start()
+                    }
+                } catch (e: Exception) {
+                    if (running) Logger.log("cmd server stopped") else Logger.log("cmd server error: " + e.message)
+                } finally {
+                    synchronized(lock) {
+                        if (serverThread === Thread.currentThread()) {
+                            serverThread = null
+                            serverSocket = null
+                        }
+                    }
+                }
+            }
+            serverThread = thread
+            thread.start()
+        }
     }
 
     fun detach(c: Commands) {
         if (cmds === c) cmds = null
+    }
+
+    fun stop() {
+        var server: ServerSocket? = null
+        var thread: Thread? = null
+        synchronized(lock) {
+            server = serverSocket
+            thread = serverThread
+            serverSocket = null
+            serverThread = null
+            cmds = null
+            handler = null
+        }
+        try { server?.close() } catch (_: Exception) {}
+        thread?.interrupt()
     }
 
     private fun handle(sock: java.net.Socket) {

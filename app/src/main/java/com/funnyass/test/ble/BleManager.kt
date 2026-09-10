@@ -99,6 +99,10 @@ class BleManager(private val ctx: Context) {
         val dev = try { a.getRemoteDevice(mac) } catch (e: Exception) { null }
         if (dev == null) { main.post { listener?.onStateChanged(5, "无效 MAC") }; return }
         stopScan()
+        try { gatt?.close() } catch (_: Exception) {}
+        gatt = null
+        writeChar = null
+        rxBuffer.reset()
         main.post { listener?.onStateChanged(1, "连接中…") }
         try {
             gatt = dev.connectGatt(ctx, false, gattCallback)
