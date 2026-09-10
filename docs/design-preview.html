@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>睿智校园 UI 设计规范预览</title>
+<style>
+:root{
+  --primary:#1F5FD1; --on-primary:#FFFFFF; --primary-container:#EAF2FF; --on-primary-container:#1F5FD1;
+  --bg:#F5F6F8; --surface:#FFFFFF; --on-surface:#1F2329; --on-surface-variant:#5F6673; --on-surface-tertiary:#667085;
+  --outline:#E7E9EE; --success:#0A7D43; --success-container:#E9F8F0; --warning:#B54708; --warning-container:#FFF3E8;
+  --danger:#B42318; --danger-container:#FEE4E2; --radius-card:20px; --radius-button:14px; --radius-input:12px;
+  --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:sans-serif;background:var(--bg);color:var(--on-surface);padding:24px}
+h1{font-size:30px;line-height:38px;margin:0 0 8px}
+h2{font-size:20px;line-height:28px;margin:32px 0 12px}
+p{font-size:14px;line-height:22px;color:var(--on-surface-variant);margin:0 0 8px}
+.card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-card);padding:var(--space-5);margin:var(--space-4) 0;max-width:720px}
+.row{display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center}
+.swatch{width:120px;height:72px;border-radius:var(--radius-input);border:1px solid var(--outline);display:flex;align-items:flex-end;padding:8px;color:#fff;font-size:12px}
+.btn{height:56px;border:0;border-radius:var(--radius-button);background:var(--primary);color:var(--on-primary);font-size:16px;font-weight:600;padding:0 20px;min-width:160px}
+.btn.secondary{background:var(--primary-container);color:var(--on-primary-container);height:48px}
+.btn.danger{background:var(--danger);color:#fff}
+.chip{display:inline-flex;align-items:center;height:30px;border-radius:999px;padding:0 12px;font-size:12px;font-weight:600}
+.chip.success{background:var(--success-container);color:var(--success)}
+.chip.warning{background:var(--warning-container);color:var(--warning)}
+.chip.danger{background:var(--danger-container);color:var(--danger)}
+.chip.neutral{background:var(--primary-container);color:var(--on-primary-container)}
+.input{width:100%;height:56px;border:1px solid var(--outline);border-radius:var(--radius-input);padding:0 16px;font-size:15px;background:var(--surface);color:var(--on-surface)}
+.label{font-size:13px;color:var(--on-surface-variant);margin-bottom:6px}
+.device{display:flex;gap:12px;align-items:center;min-height:72px;padding:12px 0;border-bottom:1px solid var(--outline)}
+.device:last-child{border-bottom:0}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--primary-container);display:flex;align-items:center;justify-content:center;color:var(--on-primary-container);font-weight:700}
+.device-title{font-size:16px;font-weight:600}
+.device-sub{font-size:13px;color:var(--on-surface-variant)}
+.device-mac{font-size:12px;font-family:monospace;color:var(--on-surface-tertiary)}
+.small{font-size:12px;line-height:16px;color:var(--on-surface-tertiary)}
+.log{background:#111;color:#9AE6B4;font:12px/18px monospace;border-radius:12px;padding:12px;max-height:120px;overflow:auto}
+</style>
+</head>
+<body>
+<h1>睿智校园 · UI 规范预览</h1>
+<p>P0 方向：高对比、主操作固定底部、调试信息默认隐藏、触控目标 ≥48dp。</p>
+
+<h2>颜色</h2>
+<div class="card">
+  <div class="row">
+    <div class="swatch" style="background:#1F5FD1">Primary #1F5FD1</div>
+    <div class="swatch" style="background:#EAF2FF;color:#1F5FD1">PrimaryContainer</div>
+    <div class="swatch" style="background:#0A7D43">Success #0A7D43</div>
+    <div class="swatch" style="background:#B54708">Warning #B54708</div>
+    <div class="swatch" style="background:#B42318">Danger #B42318</div>
+  </div>
+</div>
+
+<h2>文字</h2>
+<div class="card">
+  <h1 style="font-size:30px;margin:0">页面标题 30sp Bold</h1>
+  <h2 style="margin:8px 0 0">卡片标题 20sp SemiBold</h2>
+  <p>正文 14sp Regular，用于说明和辅助信息。</p>
+  <div class="small">辅助说明 12sp，可读性优先。</div>
+</div>
+
+<h2>按钮</h2>
+<div class="card">
+  <div class="row">
+    <button class="btn">开始洗澡</button>
+    <button class="btn secondary">连接设备</button>
+    <button class="btn danger">停止并结算</button>
+  </div>
+</div>
+
+<h2>状态标签</h2>
+<div class="card row">
+  <span class="chip success">使用中</span>
+  <span class="chip warning">重试中</span>
+  <span class="chip danger">已断开</span>
+  <span class="chip neutral">等待连接</span>
+</div>
+
+<h2>输入框</h2>
+<div class="card">
+  <div class="label">手机号</div>
+  <input class="input" placeholder="请输入 11 位手机号">
+  <div class="small" style="margin-top:8px">输入框最小高度 56dp，错误态使用危险色。</div>
+</div>
+
+<h2>设备列表项</h2>
+<div class="card">
+  <div class="device">
+    <div class="avatar">水</div>
+    <div style="flex:1">
+      <div class="device-title">宿舍 101 · KLCXKJ-Water</div>
+      <div class="device-sub">-62 dBm · 已识别</div>
+      <div class="device-mac">AA:BB:CC:DD:EE:FF</div>
+    </div>
+    <span class="chip success">可连接</span>
+  </div>
+  <div class="device">
+    <div class="avatar" style="background:#F1F3F7;color:#667085">?</div>
+    <div style="flex:1">
+      <div class="device-title">未命名设备</div>
+      <div class="device-sub">-88 dBm</div>
+      <div class="device-mac">11:22:33:44:55:66</div>
+    </div>
+    <span class="chip neutral">未知</span>
+  </div>
+</div>
+
+<h2>日志（仅调试）</h2>
+<div class="card">
+  <div class="log">[status] 已连接，正在确认设备状态…<br>回帧 cmd=0x23 payload=...</div>
+</div>
+
+</body>
+</html>
