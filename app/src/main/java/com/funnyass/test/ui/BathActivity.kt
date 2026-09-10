@@ -69,6 +69,10 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     private var user: UserInfo? = null
     private var device: DeviceInfo? = null
     private val devices = LinkedHashMap<String, BluetoothDevice>()
+    private val deviceRssi = mutableMapOf<String, Int>()
+    private val deviceBleNames = mutableMapOf<String, String>()
+    private val deviceInfoCache = LinkedHashMap<String, DeviceInfo>()
+    private val deviceInfoFetching = mutableSetOf<String>()
     private lateinit var adapter: ArrayAdapter<String>
     private var selectedMac: String? = null
 
@@ -332,6 +336,7 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
                 val r: BaseResponse<DeviceInfo> = Api.deviceByMac(u, mac)
                 runOnUiThread {
                     if (r.errorCode == 0 && r.data != null) {
+                        deviceInfoCache[mac] = r.data
                         device = r.data
                         renderDevice()
                         updateActionButtons()
@@ -344,6 +349,54 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
                 }
             } catch (e: Exception) {
                 runOnUiThread { Logger.log("设备信息异常: " + e.message) }
+            }
+        }.start()
+    }
+
+    private fun formatDeviceInfo(d: DeviceInfo): String {
+        val room = d.roomName?.takeIf { it.isNotBlank() }
+        val devName = d.devName?.takeIf { it.isNotBlank() }
+        val kind = d.devTypeName?.takeIf { it.isNotBlank() }
+        val parts = listOfNotNull(room, devName, kind).distinct()
+        return if (parts.isEmpty()) "已识别设备" else parts.joinToString(" · ")
+    }
+
+    private fun deviceListLabel(mac: String): String {
+        val info = deviceInfoCache[mac]
+        val serverName = info?.let { formatDeviceInfo(it) }
+        val bleName = deviceBleNames[mac]?.takeIf { it.isNotBlank() }
+        val name = serverName ?: bleName ?: "未命名设备"
+        val rssi = deviceRssi[mac]?.let { "  ·  $it dBm" }.orEmpty()
+        return name + rssi + "\n" + mac
+    }
+
+    private fun refreshDeviceList() {
+        adapter.clear()
+        devices.keys.forEach { mac -> adapter.add(deviceListLabel(mac)) }
+    }
+
+    private fun fetchDeviceInfoForList(mac: String) {
+        val u = user ?: return
+        if (mac.isBlank() || deviceInfoCache.containsKey(mac)) return
+        if (!deviceInfoFetching.add(mac)) return
+        Thread {
+            try {
+                val r: BaseResponse<DeviceInfo> = Api.deviceByMac(u, mac)
+                runOnUiThread {
+                    deviceInfoFetching.remove(mac)
+                    if (r.errorCode == 0 && r.data != null) {
+                        deviceInfoCache[mac] = r.data
+                        Logger.log("扫描识别 " + mac + " -> " + formatDeviceInfo(r.data))
+                        refreshDeviceList()
+                    } else {
+                        Logger.log("扫描识别失败 " + mac + ": " + r.errorCode + " " + r.errorMessage)
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    deviceInfoFetching.remove(mac)
+                    Logger.log("扫描识别异常 " + mac + ": " + e.message)
+                }
             }
         }.start()
     }
@@ -428,8 +481,15 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         randomNumber = ""
         selectedMac = mac
         macInput.setText(mac)
-        renderDevice()
-        loadDeviceInfo(mac)
+        val cachedInfo = deviceInfoCache[mac]
+        if (cachedInfo != null) {
+            device = cachedInfo
+            renderDevice()
+        } else {
+            device = null
+            renderDevice()
+            loadDeviceInfo(mac)
+        }
         Logger.log("连接 " + mac)
         ble.connect(mac)
     }
@@ -465,6 +525,8 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         selectedMac = null
         macInput.text.clear()
         devices.clear()
+        deviceRssi.clear()
+        deviceBleNames.clear()
         adapter.clear()
         renderDevice()
         setStatusText("正在扫描附近设备…")
@@ -783,15 +845,21 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         }.start()
     }
 
-    override fun onScanResult(device: BluetoothDevice, rssi: Int) {
+    override fun onScanResult(device: BluetoothDevice, rssi: Int, advertisedName: String?) {
         val mac = device.address
         val isNew = !devices.containsKey(mac)
         devices[mac] = device
-        if (isNew) {
-            val n = try { device.name?.takeIf { it.isNotBlank() } ?: "未命名设备" }
-                catch (_: Exception) { "未命名设备" }
-            adapter.add(n + "  ·  " + rssi + " dBm\n" + mac)
+        deviceRssi[mac] = rssi
+        var needRefresh = false
+        if (!advertisedName.isNullOrBlank() && advertisedName != deviceBleNames[mac]) {
+            deviceBleNames[mac] = advertisedName
+            needRefresh = true
         }
+        if (isNew) {
+            needRefresh = true
+            fetchDeviceInfoForList(mac)
+        }
+        if (needRefresh) refreshDeviceList()
     }
 
     override fun onStateChanged(state: Int, msg: String) {

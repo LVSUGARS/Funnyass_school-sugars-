@@ -35,7 +35,7 @@ class BleManager(private val ctx: Context) {
     }
 
     interface Listener {
-        fun onScanResult(device: BluetoothDevice, rssi: Int)
+        fun onScanResult(device: BluetoothDevice, rssi: Int, advertisedName: String?)
         fun onStateChanged(state: Int, msg: String)
         fun onFrame(cmd: Int, payload: ByteArray)   // 收到设备回帧（二进制帧已拆好）
         fun onWriteDone(cmd: Int, success: Boolean)
@@ -86,8 +86,9 @@ class BleManager(private val ctx: Context) {
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             val dev = result.device ?: return
-            val name = try { dev.name } catch (_: Exception) { null }
-            main.post { listener?.onScanResult(dev, result.rssi) }
+            val advertised = try { result.scanRecord?.deviceName?.takeIf { it.isNotBlank() } } catch (_: Exception) { null }
+            val cachedName = try { dev.name?.takeIf { it.isNotBlank() } } catch (_: Exception) { null }
+            main.post { listener?.onScanResult(dev, result.rssi, advertised ?: cachedName) }
         }
         override fun onScanFailed(errorCode: Int) {
             main.post { listener?.onStateChanged(5, "扫描失败 $errorCode") }
