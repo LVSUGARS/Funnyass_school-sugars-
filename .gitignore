@@ -21,3 +21,6 @@ local.properties
 *.jks
 *.keystore
 *.log
+
+# 真机/模拟器验证截图（可能含账号信息，不入库）
+docs/verify-shots/

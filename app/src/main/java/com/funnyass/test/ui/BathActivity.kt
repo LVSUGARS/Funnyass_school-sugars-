@@ -2236,7 +2236,7 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     }
 
     companion object {
-        private const val APP_VERSION = "1.0.0"
+        private const val APP_VERSION = "1.0.2"
 
         internal fun resolveGaugeState(
             connected: Boolean,

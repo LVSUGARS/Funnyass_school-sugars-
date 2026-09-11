@@ -40,14 +40,17 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
+            <!--
+              登录页 Logo 直接使用软件图标（与桌面图标同款）。
+              原先是蓝色圆底 + 白色水滴矢量图，与图标不一致。
+              图标本身是带圆角与底色的位图，因此这里不再加背景、内边距和 tint。
+            -->
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:background="@drawable/bg_apple_login_logo"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:contentDescription="睿智校园"
-                android:padding="20dp"
-                android:src="@drawable/ic_water_drop"
-                android:tint="@color/white" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_launcher_ruizhi_no_ads" />
 
             <TextView
                 android:layout_width="wrap_content"
