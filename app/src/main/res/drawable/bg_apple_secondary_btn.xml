@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 次要按钮底：中性底色 999dp 圆角 + 按压反馈（对应 HTML .picker-action-outline / .account-action） -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#1F000000">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/apple_neutral_tint" />
+            <corners android:radius="999dp" />
+        </shape>
+    </item>
+</ripple>

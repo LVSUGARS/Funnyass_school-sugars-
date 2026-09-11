@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 设置页操作行底：中性底 16dp 圆角 + 按压反馈（对应 HTML .account-action） -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#1F000000">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/apple_neutral_tint" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</ripple>

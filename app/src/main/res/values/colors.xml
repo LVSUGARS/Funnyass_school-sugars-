@@ -17,4 +17,24 @@
     <color name="miui_gray_tint">#F1F3F7</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Apple 极简风格，浅色 -->
+    <color name="apple_bg">#F5F5F7</color>
+    <color name="apple_surface">#FFFFFFFF</color>
+    <color name="apple_text">#1D1D1F</color>
+    <color name="apple_secondary">#86868B</color>
+    <color name="apple_line">#D2D2D7</color>
+    <color name="apple_card_border">#E6E6EB</color>
+    <color name="apple_blue">#0071E3</color>
+    <color name="apple_green">#34C759</color>
+    <color name="apple_red">#FF3B30</color>
+    <color name="apple_blue_tint">#EAF2FF</color>
+    <color name="apple_green_tint">#E9F8F0</color>
+    <color name="apple_red_tint">#FFEBEA</color>
+    <color name="apple_amber">#FF9F0A</color>
+    <color name="apple_amber_tint">#FFF3E0</color>
+    <color name="apple_gauge_track">#E5E5EA</color>
+    <color name="apple_scrim">#66000000</color>
+    <color name="apple_sheet_grabber">#D2D2D7</color>
+    <color name="apple_neutral_tint">#F2F2F7</color>
 </resources>

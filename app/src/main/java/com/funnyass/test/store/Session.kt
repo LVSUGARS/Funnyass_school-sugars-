@@ -9,6 +9,7 @@ object Session {
     private const val SP = "qzxy_lite"
     private const val KEY_USER = "user_info"
     private const val KEY_PHONE = "user_phone_num"
+    private const val KEY_DEVICE_MAC = "selected_device_mac"
 
     private fun sp(ctx: Context) = ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
     private val gson = Gson()
@@ -58,6 +59,19 @@ object Session {
     } catch (e: Exception) { null }
 
     fun phone(ctx: Context): String? = sp(ctx).getString(KEY_PHONE, null)
+
+    /**
+     * 上次选中的洗澡设备 MAC。原实现里设备选择只存在内存，重启就丢，
+     * 用户每次都得重新扫描再点一遍，所以这里持久化。
+     */
+    fun selectedDeviceMac(ctx: Context): String? =
+        sp(ctx).getString(KEY_DEVICE_MAC, null)?.takeIf { it.isNotBlank() }
+
+    fun saveSelectedDeviceMac(ctx: Context, mac: String?) {
+        val edit = sp(ctx).edit()
+        if (mac.isNullOrBlank()) edit.remove(KEY_DEVICE_MAC) else edit.putString(KEY_DEVICE_MAC, mac)
+        edit.apply()
+    }
 
     fun loginCode(ctx: Context): String? = loadUser(ctx)?.let { user ->
         user.v3LoginCode?.takeIf { it.isNotBlank() }

@@ -9,10 +9,10 @@
   --black:#000000; --white:#ffffff; --gray:#f5f5f7; --blue:#0071e3; --blue-hover:#0077ed;
   --green:#34c759; --red:#ff3b30; --purple:#a13ff6; --text:#1d1d1f; --secondary:#86868b;
   --line:#d2d2d7; --card:#ffffff; --card-radius:22px; --button-radius:999px; --input-radius:14px;
-  --shadow:0 8px 30px rgba(0,0,0,.08); --shadow-strong:0 20px 60px rgba(0,0,0,.18);
+  --shadow:0 8px 30px rgba(0,0,0,.08); --shadow-strong:0 20px 60px rgba(0,0,0,.18); --chip-bg:rgba(52,199,89,.14); --chip-border:rgba(52,199,89,.45); --glow:rgba(52,199,89,.35); --primary-shadow:rgba(0,113,227,.30);
 }
 body[data-theme="dark"]{
-  --gray:#000000; --card:#1c1c1e; --text:#f5f5f7; --secondary:#a1a1a6; --line:#38383a;
+  --gray:#000000; --card:#1c1c1e; --text:#f5f5f7; --secondary:#a1a1a6; --line:#38383a; --blue:#0a84ff; --green:#30d158; --red:#ff453a; --chip-bg:rgba(48,209,88,.12); --chip-border:rgba(48,209,88,.45); --glow:rgba(48,209,88,.35); --primary-shadow:rgba(10,132,255,.30);
   --shadow:0 8px 30px rgba(0,0,0,.45); --shadow-strong:0 20px 60px rgba(0,0,0,.65);
 }
 *{box-sizing:border-box}
@@ -74,6 +74,23 @@ body[data-theme="dark"] .chip.green{background:rgba(52,199,89,.18);color:#5ee07a
 .control{position:absolute;left:0;right:0;bottom:0;padding:14px 18px 20px;background:linear-gradient(to top,var(--card),transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .control .btn{margin:0;box-shadow:0 12px 30px rgba(0,113,227,.28)}
 .control .btn.stop{background:var(--red);box-shadow:0 12px 30px rgba(255,59,48,.25)}
+.hero{background:var(--card);border-radius:26px;padding:22px;box-shadow:var(--shadow);margin-bottom:14px}
+.hero-top{display:flex;align-items:center;justify-content:space-between}
+.hero-icon{width:56px;height:56px;border-radius:18px;background:rgba(0,113,227,.12);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:22px}
+.hero-title{font-size:30px;line-height:1.12;font-weight:700;letter-spacing:-.03em;margin:18px 0 4px}
+.hero-sub{font-size:15px;color:var(--secondary)}
+.hero-stats{display:flex;gap:10px;margin-top:18px}
+.stat{flex:1;background:var(--gray);border-radius:16px;padding:12px}
+body[data-theme="dark"] .stat{background:#2c2c2e}
+.stat .k{font-size:11px;color:var(--secondary);margin-bottom:4px}
+.stat .v{font-size:15px;font-weight:600}
+.account-pill{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:999px;padding:9px 8px 9px 16px;box-shadow:var(--shadow);margin-bottom:14px}
+.account-pill .left{font-size:13px;color:var(--secondary)}
+.account-pill .right{font-size:15px;font-weight:700;background:var(--gray);border-radius:999px;padding:6px 12px}
+.list-card{background:var(--card);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.list-head .title{font-size:17px;font-weight:700}
+.ghost-btn{border:0;background:none;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer}
 .device-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
 .device-row:last-child{border-bottom:0}
 .device-avatar{width:44px;height:44px;border-radius:14px;background:rgba(0,113,227,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700}
@@ -86,6 +103,350 @@ body[data-theme="dark"] .chip.green{background:rgba(52,199,89,.18);color:#5ee07a
 .type .t3{font-size:17px;font-weight:600}
 .type .t4{font-size:15px;color:var(--secondary)}
 .log{background:#0b0b0c;color:#7ee787;border-radius:16px;padding:14px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto;max-height:150px}
+/* ===== 紧凑版 ===== */
+.phone-wrap{display:flex;flex-direction:column}
+.phone-label{font-size:14px;font-weight:700;color:var(--secondary);margin:0 0 10px 10px}
+.phones.with-labels > .phone:first-child{margin-top:31px}
+.bath-compact .screen-body{padding-bottom:120px}
+.bath-compact .appbar{padding:6px 0 14px}
+.bath-compact .appbar h3{font-size:26px}
+.compact-card{background:var(--card);border-radius:18px;padding:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);margin-bottom:10px}
+body[data-theme="dark"] .compact-card{box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.compact-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.compact-device{display:flex;align-items:center;gap:12px;min-width:0}
+.compact-icon{width:42px;height:42px;border-radius:13px;background:rgba(0,113,227,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+body[data-theme="dark"] .compact-icon{background:rgba(10,132,255,.16)}
+.compact-name{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.compact-sub{font-size:12px;color:var(--secondary);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+.compact-divider{height:1px;background:var(--line);margin:12px 0}
+.compact-muted{font-size:13px;color:var(--secondary)}
+.compact-ok{font-size:14px;font-weight:700;color:var(--green)}
+.compact-collapse{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.05)}
+body[data-theme="dark"] .compact-collapse{box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.compact-collapse .left{display:flex;align-items:center;gap:10px;min-width:0}
+.compact-collapse .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex:0 0 auto}
+.compact-collapse .txt{font-size:14px;font-weight:600}
+.compact-collapse .sub{font-size:12px;color:var(--secondary);margin-top:2px}
+.compact-collapse .chev{color:var(--secondary);font-size:20px;line-height:1}
+.compact-control{background:linear-gradient(to top,var(--gray),transparent)}
+.compact-control .btn{margin:0;box-shadow:0 12px 30px rgba(0,113,227,.28)}
+
+/* ===== 极简版 ===== */
+.bath-minimal .screen-body{flex:1;display:flex;flex-direction:column;padding:0 22px 120px}
+.minimal-appbar{display:flex;align-items:center;justify-content:space-between;padding:8px 0 0}
+.minimal-appbar h3{font-size:30px;line-height:1.1;letter-spacing:-.03em;margin:0}
+.minimal-icon-btn{width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:var(--blue);font-size:22px}
+.minimal-account{font-size:13px;color:var(--secondary);margin-top:8px;text-align:center}
+.minimal-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 0 14px}
+.minimal-drop{width:124px;height:124px;border-radius:38px;display:flex;align-items:center;justify-content:center;color:var(--blue);background:rgba(0,113,227,.10)}
+body[data-theme="dark"] .minimal-drop{background:rgba(10,132,255,.16)}
+.minimal-device{font-size:30px;font-weight:700;letter-spacing:-.03em;margin-top:22px}
+.minimal-sub{font-size:15px;color:var(--secondary);margin-top:6px}
+.minimal-sub strong{color:var(--green);font-weight:700}
+.minimal-state{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:17px;font-weight:700;margin-top:18px}
+.minimal-state .state-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+body[data-theme="dark"] .minimal-state{color:#5ee07a}
+body[data-theme="dark"] .minimal-state .state-dot{background:#5ee07a}
+.minimal-hint{font-size:17px;font-weight:700;line-height:1.3;margin-top:18px}
+.minimal-link{border:0;background:none;color:var(--blue);font-size:15px;font-weight:700;padding:12px;margin-top:12px}
+.minimal-control{background:linear-gradient(to top,var(--gray),transparent)}
+.minimal-control .btn{margin:0;box-shadow:0 12px 30px rgba(0,113,227,.28)}
+/* ===== 融合版：极简骨架 + 紧凑折叠入口 ===== */
+.merge-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);flex:0 0 auto}
+.merge-row .label{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.merge-row .sub{font-size:12px;color:var(--secondary);margin-top:3px}
+.merge-row .chev{color:var(--secondary);font-size:22px;line-height:1}
+.bath-merge .minimal-hero{padding-bottom:6px}
+/* ===== 仪表盘融合版：中部大卡片 + 底部小卡片 + 余额仪表盘 ===== */
+.bath-dash .screen-body{padding:0 20px 120px}
+.dash-account{font-size:13px;color:var(--secondary);margin-top:8px}
+.dash-hero{background:var(--card);border-radius:26px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);margin-top:16px}
+body[data-theme="dark"] .dash-hero{box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.dash-hero-top{display:flex;align-items:center;justify-content:space-between}
+.dash-icon{width:56px;height:56px;border-radius:18px;background:rgba(0,113,227,.12);color:var(--blue);display:flex;align-items:center;justify-content:center}
+body[data-theme="dark"] .dash-icon{background:rgba(10,132,255,.16)}
+.dash-title{font-size:28px;line-height:1.12;font-weight:700;letter-spacing:-.03em;margin-top:16px}
+.dash-sub{font-size:14px;color:var(--secondary);margin-top:4px}
+.dash-status{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:15px;font-weight:700;margin-top:14px}
+.dash-status .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.dash-card{background:var(--card);border-radius:20px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.05);min-height:154px;display:flex;flex-direction:column}
+body[data-theme="dark"] .dash-card{box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.dash-label{font-size:12px;color:var(--secondary);font-weight:600}
+.gauge-wrap{position:relative;width:100%;height:78px;margin-top:8px}
+.gauge-wrap svg{width:100%;height:78px;display:block;overflow:visible}
+.gauge-track{fill:none;stroke:var(--line);stroke-width:10;stroke-linecap:round}
+.gauge-value{fill:none;stroke:var(--blue);stroke-width:10;stroke-linecap:round}
+.gauge-amount{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:18px;font-weight:700;letter-spacing:-.02em}
+.gauge-note{font-size:11px;color:var(--secondary);text-align:center;margin-top:4px}
+.dash-big{font-size:30px;font-weight:700;letter-spacing:-.04em;margin-top:14px}
+.dash-unit{font-size:14px;font-weight:600;color:var(--secondary);margin-left:3px}
+.dash-link{font-size:13px;font-weight:600;color:var(--blue);margin-top:auto;padding-top:14px}
+/* ===== 借鉴版：深色圆形仪表盘卡片 ===== */
+.bath-borrow{background:var(--gray)}
+.bath-borrow .screen-body{padding:0 20px 24px}
+.borrow-card{background:#111112;color:#fff;border-radius:34px;padding:24px 20px 22px;box-shadow:0 22px 50px rgba(0,0,0,.24);margin-top:10px}
+body[data-theme="dark"] .borrow-card{background:#0b0b0c;box-shadow:0 22px 50px rgba(0,0,0,.75)}
+.borrow-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.borrow-eyebrow{font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.55);font-weight:700}
+.borrow-title{font-size:26px;line-height:1.15;letter-spacing:-.03em;font-weight:700;margin-top:6px}
+.borrow-chip{display:inline-flex;align-items:center;gap:6px;height:32px;border-radius:999px;padding:0 12px;border:1px solid rgba(52,199,89,.45);color:#5ee07a;font-size:12px;font-weight:700;background:rgba(52,199,89,.10);white-space:nowrap}
+.borrow-chip .dot{width:7px;height:7px;border-radius:50%;background:#5ee07a}
+.borrow-gauge{position:relative;width:200px;height:200px;margin:24px auto 0}
+.borrow-gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.borrow-track{fill:none;stroke:rgba(255,255,255,.12);stroke-width:12}
+.borrow-value{fill:none;stroke:var(--green);stroke-width:12;stroke-linecap:round;stroke-dasharray:477.5;stroke-dashoffset:95.5;filter:drop-shadow(0 0 10px rgba(52,199,89,.35))}
+.borrow-gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.borrow-big{font-size:42px;font-weight:700;letter-spacing:-.05em;line-height:1}
+.borrow-gauge-label{font-size:13px;font-weight:700;color:#5ee07a;margin-top:6px}
+.borrow-device{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:24px}
+.borrow-sub{font-size:13px;color:rgba(255,255,255,.60);margin-top:4px}
+.borrow-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.borrow-stat{background:rgba(255,255,255,.08);border-radius:16px;padding:12px}
+.borrow-stat .k{font-size:11px;color:rgba(255,255,255,.55);margin-bottom:4px}
+.borrow-stat .v{font-size:15px;font-weight:700}
+.borrow-btn{width:100%;height:54px;border:0;border-radius:999px;background:#fff;color:#111;font-size:17px;font-weight:700;margin-top:18px;cursor:pointer}
+/* ===== 全屏借鉴版：Apple 浅色 / 深色仪表盘 ===== */
+.bath-full{background:var(--gray);color:var(--text)}
+.bath-full .statusbar{color:var(--text)}
+.bath-full .screen-body{display:flex;flex-direction:column;padding:0 20px 18px;overflow:hidden}
+.full-appbar{padding:2px 0 6px}
+.full-appbar h3{color:var(--text);font-size:25px;letter-spacing:-.03em}
+.full-refresh{width:40px;height:40px;border-radius:50%;border:0;background:var(--card);color:var(--blue);font-size:22px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.full-hero{display:flex;flex-direction:column;flex:1;padding-top:8px}
+.full-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.full-eyebrow{font-size:11px;letter-spacing:.18em;color:var(--secondary);font-weight:700}
+.full-title{font-size:30px;line-height:1.12;font-weight:700;letter-spacing:-.03em;margin-top:6px;color:var(--text)}
+.full-chip{display:inline-flex;align-items:center;gap:6px;height:32px;border-radius:999px;padding:0 12px;border:1px solid var(--chip-border);color:var(--green);font-size:12px;font-weight:700;background:var(--chip-bg);white-space:nowrap}
+.full-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.full-gauge{position:relative;width:176px;height:176px;margin:16px auto 0}
+.full-gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.full-track{fill:none;stroke:var(--line);stroke-width:10}
+.full-value{fill:none;stroke:var(--green);stroke-width:10;stroke-linecap:round;stroke-dasharray:477.5;stroke-dashoffset:95.5;filter:drop-shadow(0 0 10px var(--glow))}
+.full-gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.full-big{font-size:36px;font-weight:700;letter-spacing:-.05em;line-height:1;color:var(--text)}
+.full-gauge-label{font-size:12px;font-weight:700;color:var(--green);margin-top:4px}
+.full-device{font-size:19px;font-weight:700;letter-spacing:-.02em;margin-top:18px;color:var(--text)}
+.full-sub{font-size:12px;color:var(--secondary);margin-top:3px}
+.full-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.full-stat{background:var(--card);border-radius:14px;padding:10px;box-shadow:0 6px 18px rgba(0,0,0,.04)}
+.full-stat .k{font-size:10px;color:var(--secondary);margin-bottom:3px}
+.full-stat .v{font-size:14px;font-weight:700;color:var(--text)}
+.full-btn{width:100%;height:50px;border:0;border-radius:999px;background:var(--blue);color:#fff;font-size:16px;font-weight:700;margin-top:auto;cursor:pointer;box-shadow:0 14px 30px var(--primary-shadow)}.full-account{font-size:12px;color:var(--secondary);margin-top:6px}
+.archive{margin-top:48px;border-top:1px solid var(--line);padding-top:20px}
+.archive summary{cursor:pointer;font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--secondary);margin-bottom:8px}
+.archive[open] summary{color:var(--text)}
+.archive .section{margin-top:28px}.full-device-btn{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-radius:14px;background:var(--card);color:var(--text);padding:10px 12px;margin-top:14px;cursor:pointer;text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.04)}
+.full-device-main{display:flex;flex-direction:column;gap:4px;min-width:0}
+.full-device-k{font-size:10px;color:var(--secondary);font-weight:600}
+.full-device-v{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.full-device-chev{color:var(--secondary);font-size:22px;line-height:1;flex:0 0 auto}
+.picker-dialog{width:min(92vw,420px);border:0;border-radius:28px;padding:22px;background:var(--card);color:var(--text);box-shadow:0 30px 80px rgba(0,0,0,.28)}
+.picker-dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.picker-eyebrow{font-size:11px;letter-spacing:.16em;color:var(--secondary);font-weight:700}
+.picker-title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+.picker-close{width:34px;height:34px;border-radius:50%;border:0;background:var(--gray);color:var(--secondary);font-size:16px;cursor:pointer}
+.picker-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.picker-row{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:18px;background:var(--gray);padding:12px;text-align:left;cursor:pointer;color:var(--text)}
+.picker-row.selected{background:var(--chip-bg);box-shadow:inset 0 0 0 1px var(--chip-border)}
+.picker-icon{width:42px;height:42px;border-radius:13px;background:var(--card);display:flex;align-items:center;justify-content:center;color:var(--blue);font-weight:700;flex:0 0 auto}
+.picker-info{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.picker-name{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.picker-meta{font-size:12px;color:var(--secondary)}
+.picker-badge{font-size:11px;font-weight:700;color:var(--secondary);white-space:nowrap}
+.picker-badge.green{color:var(--green)}
+.picker-badge.blue{color:var(--blue)}
+.picker-scan{width:100%;height:50px;border:0;border-radius:999px;background:var(--blue);color:#fff;font-size:15px;font-weight:700;margin-top:16px;cursor:pointer}/* ===== 主方案交互动效 ===== */
+.state-switch{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.state-btn{border:0;border-radius:999px;background:var(--card);color:var(--secondary);font-size:13px;font-weight:700;padding:9px 14px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.state-btn.active{background:var(--blue);color:#fff;box-shadow:0 8px 20px var(--primary-shadow)}
+.full-value{transition:stroke .25s,stroke-dasharray .25s,stroke-dashoffset .25s,opacity .25s}
+.full-btn{transition:background .25s,opacity .25s,transform .15s}
+.full-btn:active{transform:scale(.98)}
+.full-btn[disabled]{opacity:.45;pointer-events:none}
+.full-gauge-meta{font-size:11px;color:var(--secondary);margin-top:4px}
+.full-gauge-meta:empty{display:none}
+.full-orbit{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s}
+.full-droplet{position:absolute;top:-3px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50% 50% 50% 0;background:var(--blue);transform:rotate(45deg);box-shadow:0 0 12px var(--primary-shadow)}
+@keyframes gaugeBreathe{0%,100%{opacity:.72}50%{opacity:1}}
+@keyframes gaugeFlow{to{stroke-dashoffset:-477.5}}
+@keyframes gaugeFlowReverse{to{stroke-dashoffset:477.5}}
+@keyframes gaugeOrbit{to{transform:rotate(360deg)}}
+@keyframes gaugeAlert{0%,100%{opacity:.55}50%{opacity:1}}
+.bath-full[data-state="idle"] .full-value{stroke:var(--green);stroke-dasharray:477.5;stroke-dashoffset:95.5;animation:gaugeBreathe 2.8s ease-in-out infinite}
+.bath-full[data-state="starting"] .full-value{stroke:var(--blue);stroke-dasharray:120 357.5;stroke-dashoffset:0;animation:gaugeFlow 1.1s linear infinite}
+.bath-full[data-state="bathing"] .full-value{stroke:var(--blue);stroke-dasharray:80 397.5;stroke-dashoffset:0;animation:gaugeFlow 1.6s linear infinite}
+.bath-full[data-state="stopping"] .full-value{stroke:#ff9f0a;stroke-dasharray:120 357.5;stroke-dashoffset:0;animation:gaugeFlowReverse 1.1s linear infinite}
+.bath-full[data-state="settled"] .full-value{stroke:var(--green);stroke-dasharray:477.5;stroke-dashoffset:0;animation:gaugeBreathe 2.4s ease-in-out infinite}
+.bath-full[data-state="error"] .full-value{stroke:var(--red);stroke-dasharray:477.5;stroke-dashoffset:95.5;animation:gaugeAlert 1s ease-in-out infinite}
+.bath-full[data-state="bathing"] .full-orbit{opacity:1;animation:gaugeOrbit 3.6s linear infinite}
+.bath-full[data-state="bathing"] .full-btn{background:var(--red);box-shadow:0 14px 30px rgba(255,59,48,.25)}
+.bath-full[data-state="stopping"] .full-btn,
+.bath-full[data-state="error"] .full-btn{background:var(--red);opacity:.55}.bath-full[data-state="bathing"] .full-big{font-size:30px}
+.bath-full[data-state="starting"] .full-big,
+.bath-full[data-state="stopping"] .full-big,
+.bath-full[data-state="error"] .full-big{font-size:28px}
+.bath-full[data-state="starting"] .full-chip,
+.bath-full[data-state="bathing"] .full-chip{color:var(--blue);border-color:var(--blue);background:transparent}
+.bath-full[data-state="starting"] .full-chip .dot,
+.bath-full[data-state="bathing"] .full-chip .dot{background:var(--blue)}
+.bath-full[data-state="stopping"] .full-chip{color:#ff9f0a;border-color:#ff9f0a;background:transparent}
+.bath-full[data-state="stopping"] .full-chip .dot{background:#ff9f0a}
+.bath-full[data-state="error"] .full-chip{color:var(--red);border-color:var(--red);background:transparent}
+.bath-full[data-state="error"] .full-chip .dot{background:var(--red)}.bath-full[data-state="starting"] .full-value,
+.bath-full[data-state="bathing"] .full-value{filter:drop-shadow(0 0 10px rgba(10,132,255,.35))}
+.bath-full[data-state="stopping"] .full-value{filter:drop-shadow(0 0 10px rgba(255,159,10,.35))}
+.bath-full[data-state="error"] .full-value{filter:drop-shadow(0 0 10px rgba(255,69,58,.35))}.full-refresh{width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--secondary);font-size:18px;box-shadow:none}
+.full-hero-top{margin-top:auto}.full-hero{justify-content:space-between}
+.full-hero-top{margin-top:0}
+.full-btn{margin-top:0}.full-status-action{font-family:inherit;cursor:pointer}
+.full-status-refresh{margin-left:2px;color:var(--secondary);font-size:14px;line-height:1;opacity:.8;transition:transform .2s}
+.full-status-action:active .full-status-refresh{transform:rotate(90deg)}.full-track{stroke-width:12;stroke-linecap:round}
+.full-value{stroke-width:15}
+.full-gauge{border-radius:50%;background:radial-gradient(circle at 50% 35%, rgba(128,128,128,.10), transparent 64%);box-shadow:inset 0 0 22px rgba(128,128,128,.08)}.state-switch{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;max-width:720px}
+.state-btn{width:100%;height:40px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}.full-device-btn{min-height:64px;padding:0 14px;border-radius:16px}
+.full-stat{min-height:64px;padding:0 14px;border-radius:16px;display:flex;flex-direction:column;justify-content:center}
+.full-device-v,.full-stat .v{font-size:15px}
+.full-stats{gap:10px;margin-top:12px}.full-account{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:inherit}
+.full-account-chev{color:var(--secondary);font-size:16px}
+.sheet-dialog{position:fixed;left:50%;bottom:0;top:auto;transform:translateX(-50%);width:min(100%,420px);max-height:88vh;overflow:auto;margin:0;border-radius:28px 28px 0 0;padding:14px 20px 24px}
+.sheet-grabber{width:38px;height:5px;border-radius:999px;background:var(--line);margin:0 auto 12px}
+.picker-section{margin-top:18px}
+.picker-section-title{font-size:12px;color:var(--secondary);font-weight:700;letter-spacing:.04em;margin-bottom:8px}
+.picker-current{display:flex;align-items:center;gap:12px;background:var(--gray);border-radius:18px;padding:12px}
+.picker-action,.picker-action-outline,.picker-action-danger{width:100%;height:50px;border-radius:999px;font-size:15px;font-weight:700;margin-top:12px;cursor:pointer}
+.picker-action{background:var(--blue);color:#fff;border:0}
+.picker-action-outline{background:var(--card);color:var(--blue);border:1px solid var(--line)}
+.picker-action-danger{background:var(--card);color:var(--red);border:1px solid var(--line)}
+.picker-lock{display:none;background:rgba(255,159,10,.12);color:#ff9f0a;border-radius:14px;padding:10px 12px;font-size:12px;font-weight:600;margin-top:14px}
+.picker-manual{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.picker-manual summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--blue);list-style:none}
+.picker-manual summary::-webkit-details-marker{display:none}
+.picker-manual-body{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.picker-input{height:48px;border:1px solid var(--line);border-radius:14px;background:var(--gray);color:var(--text);padding:0 14px;font-size:14px;outline:none}
+.picker-connect{height:48px;border:0;border-radius:14px;background:var(--blue);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.account-block{background:var(--gray);border-radius:18px;padding:16px;margin-top:16px}
+.account-label{font-size:12px;color:var(--secondary)}
+.account-value{font-size:17px;font-weight:700;margin-top:4px}
+.account-sub{font-size:13px;color:var(--secondary);margin-top:4px}
+.is-locked{opacity:.42;pointer-events:none}
+.picker-manual.is-locked{opacity:.42;pointer-events:none}.full-account-icon{width:36px;height:36px;border-radius:50%;border:0;background:var(--card);color:var(--text);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.06);cursor:pointer}
+.full-account{display:block;width:100%;border:0;background:transparent;padding:0;text-align:left;font-size:12px;color:var(--secondary);margin-top:6px;cursor:default}
+.full-connection{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--secondary);margin-top:6px}
+.full-connection-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.bath-full[data-state="starting"] .full-connection-dot,
+.bath-full[data-state="bathing"] .full-connection-dot{background:var(--blue)}
+.bath-full[data-state="stopping"] .full-connection-dot{background:#ff9f0a}
+.bath-full[data-state="error"] .full-connection-dot{background:var(--red)}.account-head{display:flex;align-items:center;justify-content:space-between}
+.account-refresh{width:32px;height:32px;border-radius:50%;border:0;background:var(--card);color:var(--blue);font-size:16px;cursor:pointer}
+.account-refresh.is-spinning{animation:accountSpin .85s linear infinite}
+.account-divider{height:1px;background:var(--line);margin:12px 0}
+.full-gauge{cursor:pointer;transition:transform .12s,filter .2s}
+.full-gauge:active{transform:scale(.96)}
+.full-gauge.is-refreshing{animation:gaugePress .5s ease;filter:brightness(1.06)}
+.full-gauge::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid transparent;opacity:0;pointer-events:none;transform:scale(.96)}
+.bath-full[data-state="idle"] .full-gauge::after,
+.bath-full[data-state="settled"] .full-gauge::after{border-color:var(--green)}
+.bath-full[data-state="starting"] .full-gauge::after,
+.bath-full[data-state="bathing"] .full-gauge::after{border-color:var(--blue)}
+.bath-full[data-state="stopping"] .full-gauge::after{border-color:#ff9f0a}
+.bath-full[data-state="error"] .full-gauge::after{border-color:var(--red)}
+.full-gauge.is-refreshing::after{animation:gaugeHalo .8s ease-out}
+.full-gauge.is-refreshing .full-big{animation:numberPop .5s ease}
+@keyframes accountSpin{to{transform:rotate(360deg)}}
+@keyframes gaugePress{0%{transform:scale(.96)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes gaugeHalo{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.16);opacity:0}}
+@keyframes numberPop{50%{transform:scale(1.06)}}
+.bath-full[data-state="starting"] .full-gauge.is-refreshing::after,
+.bath-full[data-state="bathing"] .full-gauge.is-refreshing::after{animation-duration:.55s}
+.bath-full[data-state="stopping"] .full-gauge.is-refreshing::after{animation-duration:.65s}
+.bath-full[data-state="error"] .full-gauge.is-refreshing{animation:gaugeShake .45s ease}
+@keyframes gaugeShake{25%{transform:translateX(-2px) scale(.97)}75%{transform:translateX(2px) scale(.97)}}.account-block{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.account-info{display:flex;flex-direction:column;min-width:0}
+.account-label-gap{margin-top:12px}
+.account-divider{display:none}.account-block{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.account-info{display:flex;flex-direction:column;min-width:0}
+.account-label-gap{margin-top:12px}
+.account-divider{display:none}.account-hero{display:flex;align-items:center;gap:14px;background:var(--gray);border-radius:20px;padding:16px;margin-top:16px}
+.account-avatar{width:52px;height:52px;border-radius:50%;background:var(--card);color:var(--blue);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.account-info{display:flex;flex-direction:column;min-width:0;flex:1}
+.account-label{font-size:12px;color:var(--secondary);font-weight:600}
+.account-value{font-size:18px;font-weight:700;margin-top:3px}
+.account-label-gap{margin-top:12px}
+.account-refresh{width:36px;height:36px;border-radius:50%;border:0;background:var(--card);color:var(--blue);font-size:17px;cursor:pointer;flex:0 0 auto}
+.account-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.account-action{display:flex;align-items:center;justify-content:space-between;width:100%;height:52px;border:0;border-radius:16px;background:var(--gray);color:var(--text);font-size:15px;font-weight:600;padding:0 16px;cursor:pointer}
+.account-action .chev{color:var(--secondary);font-size:18px}
+.account-action.danger{color:var(--red)}.full-hero{display:grid;grid-template-rows:auto 1fr auto;justify-content:normal;padding-top:0;padding-bottom:0}
+.full-top-zone{display:flex;flex-direction:column;align-items:flex-start;padding-top:8px}
+.full-gauge-zone{display:flex;align-items:center;justify-content:center;min-height:0}
+.full-gauge{margin:0}
+.full-bottom-zone{display:flex;flex-direction:column;gap:12px}
+.full-device-btn{margin-top:0}
+.full-stats{margin-top:0}
+.full-btn{margin-top:0}.full-gauge-zone{align-items:flex-start;justify-content:center;padding-top:6px}
+.full-hero{grid-template-rows:auto auto auto 1fr}
+.full-device-zone{display:flex;flex-direction:column;align-items:flex-start;padding-top:2px}
+.full-bottom-zone{justify-content:flex-end}.full-hero{grid-template-rows:auto auto auto auto;row-gap:12px}
+.full-bottom-zone{justify-content:flex-start}.full-title-block{display:flex;flex-direction:column;gap:2px}
+.full-hero{grid-template-rows:auto auto auto;row-gap:12px}.full-gauge-zone{padding-top:8px;padding-bottom:0}.full-gauge-zone{padding-top:20px;padding-bottom:0}
+.full-gauge-zone{padding-top:36px;padding-bottom:0}
+.full-gauge-zone{padding-top:52px;padding-bottom:0}
+.full-gauge{width:194px;height:194px}
+.full-gauge{width:208px;height:208px}
+.full-account-icon{align-self:flex-end;transform:translateY(3px)}.account-action-right{display:flex;align-items:center;gap:8px}
+.account-action-icon{color:var(--blue);font-size:16px;display:inline-block}
+.account-action-icon.is-spinning{animation:accountSpin .85s linear infinite}
+.account-avatar.is-editing{transform:scale(1.06);box-shadow:0 0 0 4px var(--chip-bg);transition:transform .15s,box-shadow .2s}.login{background:var(--gray);text-align:center;padding-top:18px}
+body[data-theme="dark"] .login{background:var(--gray)}
+.login-body{display:flex;flex-direction:column;padding:0 22px 24px}
+.login-brand{text-align:center;padding-top:4px}
+.login-switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:rgba(128,128,128,.12);border-radius:999px;padding:4px;margin:22px 0 20px}
+.login-switch-btn{height:36px;border:0;border-radius:999px;background:transparent;color:var(--secondary);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.login-switch-btn.active{background:var(--card);color:var(--text);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.login-form{display:flex;flex-direction:column;gap:14px;text-align:left}
+.login-field label{display:block;font-size:12px;font-weight:700;color:var(--secondary);margin:0 0 7px}
+.login-field input{width:100%;height:54px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);padding:0 16px;font-size:16px;outline:none;font-family:inherit}
+.login-field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--primary-shadow)}
+.login-code-row{display:flex;gap:10px}
+.login-code-row input{flex:1}
+.login-code-btn{height:54px;border:0;border-radius:14px;background:var(--blue);color:#fff;font-size:13px;font-weight:700;padding:0 14px;white-space:nowrap;cursor:pointer;font-family:inherit}
+.login-code-btn:disabled{opacity:.45;pointer-events:none}
+.login-pwd-row{position:relative;display:flex;align-items:center}
+.login-pwd-row input{width:100%;padding-right:52px}
+.login-eye{position:absolute;right:6px;width:42px;height:42px;border:0;background:transparent;color:var(--secondary);font-size:16px;cursor:pointer}
+.login-error{min-height:18px;font-size:12px;color:var(--red);padding-left:2px}
+.login-submit{width:100%;height:56px;border:0;border-radius:999px;background:var(--blue);color:#fff;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 12px 30px var(--primary-shadow);transition:transform .12s,opacity .2s}
+.login-submit:active{transform:scale(.98)}
+.login-submit.loading{opacity:.7;pointer-events:none}
+.login-terms{font-size:12px;line-height:1.5;color:var(--secondary);text-align:center;margin-top:18px}
+.hidden{display:none!important}.login-body{padding-top:40px}
+.login-switch{margin-top:48px}
+.login-body{padding-bottom:18px;overflow:hidden}
+.login .logo{width:64px;height:64px;border-radius:20px}
+.login h3{font-size:26px;margin:12px 0 2px}
+.login p{margin:0 0 14px;font-size:14px}
+.login-switch-btn{height:32px;font-size:12px}
+.login-form{gap:10px}
+.login-field label{font-size:11px;margin-bottom:5px}
+.login-field input{height:48px;font-size:15px;border-radius:13px}
+.login-code-btn{height:48px;font-size:12px;border-radius:13px}
+.login-error{min-height:16px}
+.login-submit{height:52px;font-size:16px}
+.login-terms{margin-top:12px;font-size:11px;line-height:1.4}.login-form{flex:1}
+.login-submit{margin-top:auto}.login-form{flex:0 0 auto}
+.login-switch{margin-top:auto;margin-bottom:10px}
+.login-submit{margin-top:0}
+.login-terms{margin-top:10px}.login-brand{margin-top:48px}
+.account-avatar{border:0;padding:0;cursor:pointer;font-family:inherit}
+.account-avatar:active{transform:scale(.97)}
+.account-action-text{display:flex;flex-direction:column;gap:2px;text-align:left}
+.account-action-title{font-size:15px;font-weight:600}
+.account-action-sub{font-size:11px;color:var(--secondary);font-weight:500}.account-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.account-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.account-label{font-size:12px;color:var(--secondary);font-weight:600;flex:0 0 auto}
+.account-value{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.picker-manual-title{font-size:14px;font-weight:700;color:var(--blue);margin-bottom:10px}
 </style>
 </head>
 <body data-theme="light">
@@ -110,102 +471,275 @@ body[data-theme="dark"] .chip.green{background:rgba(52,199,89,.18);color:#5ee07a
     </div>
   </div>
 
-  <div class="section">
-    <h2>页面预览</h2>
+    <div class="section">
+    <h2>主方案 · 全屏 Apple 仪表盘（浅色 / 深色适配）</h2>
+    <p class="sub" style="margin:-6px 0 18px">点击状态按钮查看圆盘动效：待机显示余额，洗浴中切换为计时和消费进度，关阀、结算、异常都有独立动画。</p>
+    <div class="state-switch" id="stateSwitch">
+      <button class="state-btn active" data-state="idle">待机</button>
+      <button class="state-btn" data-state="starting">启动中</button>
+      <button class="state-btn" data-state="bathing">洗浴中</button>
+      <button class="state-btn" data-state="stopping">关阀中</button>
+      <button class="state-btn" data-state="settled">完成</button>
+      <button class="state-btn" data-state="error">异常</button>
+    </div>
+    <div class="phones">
+      <div class="phone-wrap">
+        <div class="phone-label">主方案 · 状态圆盘动效预览</div>
+        <div class="phone">
+          <div class="screen bath bath-full" id="bathScreen" data-state="idle">
+            <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
+            <div class="screen-body">
+              <div class="appbar full-appbar">
+                <div class="full-title-block">
+                  <div class="full-eyebrow">WATER CONTROL</div>
+                  <h3>洗澡仪表盘</h3>
+                </div>
+                <button class="full-account-icon" onclick="openAccountMenu()" aria-label="设置">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                </button>
+              </div>
+
+
+              <div class="full-hero">
+                <div class="full-gauge-zone">
+                  <div class="full-gauge" onclick="refreshGauge()" title="点击刷新">
+                    <svg viewBox="0 0 200 200">
+                      <circle class="full-track" cx="100" cy="100" r="76" />
+                      <circle class="full-value" cx="100" cy="100" r="76" />
+                    </svg>
+                    <div class="full-orbit"><span class="full-droplet"></span></div>
+                    <div class="full-gauge-center">
+                      <div class="full-big" id="gaugeMain">¥5.26</div>
+                      <div class="full-gauge-label" id="gaugeSub">余额可用</div>
+                      <div class="full-gauge-meta" id="gaugeMeta"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="full-device-zone">
+                  <div class="full-device" id="deviceName">宿舍 101</div>
+                  <div class="full-sub" id="deviceSub">KLCXKJ-Water · 设备空闲</div>
+                  <div class="full-connection"><span class="full-connection-dot"></span><span id="statusText">已连接</span></div>
+                </div>
+                <div class="full-bottom-zone">
+                  <button class="full-device-btn" onclick="openDevicePicker()">
+                    <span class="full-device-main">
+                      <span class="full-device-k">蓝牙设备</span>
+                      <span class="full-device-v" id="deviceBtnValue">已连接 · -48 dBm</span>
+                    </span>
+                    <span class="full-device-chev">›</span>
+                  </button>
+
+                  <div class="full-stats">
+                    <div class="full-stat"><div class="k" id="stat1Label">协议</div><div class="v" id="stat1Value">20</div></div>
+                    <div class="full-stat"><div class="k" id="stat2Label">水阀</div><div class="v" id="stat2Value">空闲</div></div>
+                  </div>
+
+                  <button class="full-btn" id="mainAction">开始洗澡</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="section">
+    <h2>登录页</h2>
     <div class="phones">
       <div class="phone">
         <div class="screen login">
           <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
-          <div class="screen-body">
-            <div class="logo">
-              <svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 9.4 5 14.2C5 18.1 8.1 21 12 21s7-2.9 7-6.8C19 9.4 12 2 12 2z"/></svg>
-            </div>
-            <h3>睿智校园</h3>
-            <p>公寓洗澡，清爽无打扰</p>
-            <div class="field">
-              <label>手机号</label>
-              <input value="138 0000 0000">
-            </div>
-            <div class="field">
-              <label>验证码</label>
-              <div class="code-row">
-                <input placeholder="请输入验证码">
-                <button class="code-btn">获取验证码</button>
+          <div class="screen-body login-body">
+            <div class="login-brand">
+              <div class="logo">
+                <svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 9.4 5 14.2C5 18.1 8.1 21 12 21s7-2.9 7-6.8C19 9.4 12 2 12 2z"/></svg>
               </div>
+              <h3>睿智校园</h3>
+              <p>校园热水 · 清爽无打扰</p>
             </div>
-            <button class="btn primary">验证码登录</button>
-            <button class="btn secondary">密码登录</button>
-            <div class="terms">登录后仅访问校园账户和公寓热水服务</div>
-          </div>
-        </div>
-      </div>
 
-      <div class="phone">
-        <div class="screen bath">
-          <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
-          <div class="screen-body">
-            <div class="appbar">
-              <h3>公寓洗澡</h3>
-              <button class="icon-btn">↻</button>
+            <div class="login-switch" id="loginSwitch">
+              <button class="login-switch-btn active" data-mode="code">验证码登录</button>
+              <button class="login-switch-btn" data-mode="pwd">密码登录</button>
             </div>
-            <div class="card account">
-              <div>
-                <div class="label">账户余额</div>
-                <div class="value">¥ 5.26</div>
-                <div class="phone">尾号 0000 · 账户 25468</div>
+
+            <div class="login-form">
+              <div class="login-field">
+                <label>手机号</label>
+                <input id="loginPhone" inputmode="numeric" value="138 0000 0000" placeholder="请输入手机号">
               </div>
-              <span class="chip blue">已登录</span>
-            </div>
-            <div class="card">
-              <div class="device-head">
-                <div>
-                  <div class="device-name">宿舍 101</div>
-                  <div class="device-sub">KLCXKJ-Water</div>
-                </div>
-                <span class="chip green">空闲</span>
-              </div>
-              <div class="meta">
-                <div><div class="k">蓝牙</div><div class="v">已连接</div></div>
-                <div><div class="k">协议</div><div class="v">20</div></div>
-                <div><div class="k">编号</div><div class="v">1024</div></div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="device-head">
-                <div>
-                  <div class="device-name">附近设备</div>
-                  <div class="device-sub">点击选择后连接</div>
+
+              <div class="login-field" id="codeGroup">
+                <label>验证码</label>
+                <div class="login-code-row">
+                  <input id="loginCode" inputmode="numeric" placeholder="请输入验证码" maxlength="6">
+                  <button class="login-code-btn" id="sendCodeBtn">获取验证码</button>
                 </div>
               </div>
-              <div class="device-row">
-                <div class="device-avatar">水</div>
-                <div style="flex:1">
-                  <div class="t">宿舍 101 · KLCXKJ-Water</div>
-                  <div class="s">-62 dBm · 已识别</div>
-                  <div class="m">AA:BB:CC:DD:EE:FF</div>
+
+              <div class="login-field hidden" id="pwdGroup">
+                <label>密码</label>
+                <div class="login-pwd-row">
+                  <input id="loginPwd" type="password" placeholder="请输入密码">
+                  <button class="login-eye" id="pwdToggle" aria-label="显示密码">👁</button>
                 </div>
-                <span class="chip green">可连接</span>
               </div>
-              <div class="device-row">
-                <div class="device-avatar" style="background:#f5f5f7;color:#86868b">?</div>
-                <div style="flex:1">
-                  <div class="t">未命名设备</div>
-                  <div class="s">-88 dBm</div>
-                  <div class="m">11:22:33:44:55:66</div>
-                </div>
-                <span class="chip blue">未知</span>
-              </div>
+
+              <div class="login-error" id="loginError"></div>
+
+              <button class="login-submit" id="loginSubmit">验证码登录</button>
             </div>
-          </div>
-          <div class="control">
-            <button class="btn primary">开始洗澡</button>
+
+            <div class="login-terms">登录后仅访问校园账户和公寓热水服务</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="section">
+<details class="archive">
+    <summary>归档方案 · 紧凑版 / 极简版 / 中部大卡片仪表盘</summary>
+<div class="section">
+    <h2>归档方案 · 紧凑版 / 极简版</h2>
+    <div class="phones with-labels">
+      <div class="phone-wrap">
+        <div class="phone-label">紧凑版 · 当前设备 + 折叠附近设备</div>
+        <div class="phone">
+          <div class="screen bath bath-compact">
+            <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
+            <div class="screen-body">
+              <div class="appbar">
+                <h3>公寓洗澡</h3>
+                <button class="icon-btn">↻</button>
+              </div>
+
+              <div class="compact-card">
+                <div class="compact-row">
+                  <div class="compact-device">
+                    <div class="compact-icon">
+                      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C12 2 5 9.4 5 14.2C5 18.1 8.1 21 12 21s7-2.9 7-6.8C19 9.4 12 2 12 2z"/></svg>
+                    </div>
+                    <div style="min-width:0">
+                      <div class="compact-name">宿舍 101</div>
+                      <div class="compact-sub">KLCXKJ-Water · 已连接</div>
+                      <div class="compact-sub">尾号 0000 · 余额 ¥5.26</div>
+                    </div>
+                  </div>
+                  <span class="chip green">空闲</span>
+                </div>
+                <div class="compact-divider"></div>
+                <div class="compact-row">
+                  <span class="compact-muted">设备状态</span>
+                  <span class="compact-ok">可以开始</span>
+                </div>
+              </div>
+
+              <div class="compact-collapse">
+                <div class="left">
+                  <span class="dot"></span>
+                  <div>
+                    <div class="txt">附近设备 · 2 台已发现</div>
+                    <div class="sub">已折叠，点击展开扫描列表</div>
+                  </div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+            </div>
+            <div class="control compact-control">
+              <button class="btn primary" style="margin:0">开始洗澡</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-wrap">
+        <div class="phone-label">极简版 · 底部按钮在用水时切换为停止并结算</div>
+        <div class="phone">
+          <div class="screen bath bath-minimal">
+            <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
+            <div class="screen-body">
+              <div class="minimal-appbar">
+                <h3>公寓洗澡</h3>
+                <button class="minimal-icon-btn">↻</button>
+              </div>
+              <div class="minimal-hero">
+                <div class="minimal-drop">
+                  <svg viewBox="0 0 24 24" width="58" height="58" fill="currentColor"><path d="M12 2C12 2 5 9.4 5 14.2C5 18.1 8.1 21 12 21s7-2.9 7-6.8C19 9.4 12 2 12 2z"/></svg>
+                </div>
+                <div class="minimal-device">宿舍 101</div>
+                <div class="minimal-sub">KLCXKJ-Water · <strong>已连接</strong></div>
+                <div class="minimal-state"><span class="state-dot"></span>设备空闲，可以开始</div>
+                <div class="minimal-account">尾号 0000 · 余额 ¥5.26</div>
+                <button class="minimal-link">更换设备 ›</button>
+              </div>
+            </div>
+            <div class="minimal-control">
+              <button class="btn primary" style="margin:0">开始洗澡</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="section">
+    <h2>仪表盘融合版 · 中部大卡片 + 底部小卡片</h2>
+    <p class="sub" style="margin:-6px 0 18px">中部大卡片承载当前设备和状态，底部用小卡片放余额仪表盘和附近设备入口，底部按钮固定。</p>
+    <div class="phones">
+      <div class="phone-wrap">
+        <div class="phone-label">仪表盘融合版 · 大卡片 + 小卡片</div>
+        <div class="phone">
+          <div class="screen bath bath-dash">
+            <div class="statusbar"><span>9:41</span><span class="dots">● ● ●</span></div>
+            <div class="screen-body">
+              <div class="appbar">
+                <h3>公寓洗澡</h3>
+                <button class="icon-btn">↻</button>
+              </div>
+              <div class="dash-account">尾号 0000 · 账户 25468</div>
+
+              <div class="dash-hero">
+                <div class="dash-hero-top">
+                  <div class="dash-icon">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M12 2C12 2 5 9.4 5 14.2C5 18.1 8.1 21 12 21s7-2.9 7-6.8C19 9.4 12 2 12 2z"/></svg>
+                  </div>
+                  <span class="chip green">已连接</span>
+                </div>
+                <div class="dash-title">宿舍 101</div>
+                <div class="dash-sub">KLCXKJ-Water · 设备空闲</div>
+                <div class="dash-status"><span class="dot"></span>设备空闲，可以开始</div>
+              </div>
+
+              <div class="dash-grid">
+                <div class="dash-card">
+                  <div class="dash-label">余额</div>
+                  <div class="gauge-wrap">
+                    <svg viewBox="0 0 120 78" preserveAspectRatio="xMidYMax meet">
+                      <path class="gauge-track" d="M12 66 A48 48 0 0 1 108 66" />
+                      <path class="gauge-value" d="M12 66 A48 48 0 0 1 108 66" stroke-dasharray="150.8" stroke-dashoffset="52" />
+                    </svg>
+                    <div class="gauge-amount">¥5.26</div>
+                  </div>
+                  <div class="gauge-note">可用余额</div>
+                </div>
+
+                <div class="dash-card">
+                  <div class="dash-label">附近设备</div>
+                  <div class="dash-big">2<span class="dash-unit">台</span></div>
+                  <div class="dash-link">更换洗澡设备 ›</div>
+                </div>
+              </div>
+            </div>
+            <div class="control">
+              <button class="btn primary" style="margin:0">开始洗澡</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      </details>
+<div class="section">
     <h2>文字系统</h2>
     <div class="card type">
       <div class="t1">大标题 34px / Bold</div>
@@ -244,5 +778,332 @@ body[data-theme="dark"] .chip.green{background:rgba(52,199,89,.18);color:#5ee07a
     <div class="log">[status] 已连接，正在确认设备状态…<br>回帧 cmd=0x23 payload=...</div>
   </div>
 </div>
-</body>
+<dialog id="devicePicker" class="picker-dialog sheet-dialog">
+  <div class="sheet-grabber"></div>
+  <div class="picker-head">
+    <div>
+      <div class="picker-eyebrow">DEVICE CONTROL</div>
+      <div class="picker-title">选择洗澡设备</div>
+    </div>
+    <button class="picker-close" onclick="closeDevicePicker()">×</button>
+  </div>
+
+  <div class="picker-lock" id="pickerLockHint">当前正在用水或结算，暂不能更换或断开设备</div>
+
+  <div class="picker-section">
+    <div class="picker-section-title">当前设备</div>
+    <div class="picker-current">
+      <span class="picker-icon">水</span>
+      <span class="picker-info">
+        <span class="picker-name">宿舍 101 · KLCXKJ-Water</span>
+        <span class="picker-meta">MAC AA:BB:CC:DD:EE:FF</span>
+        <span class="picker-meta">编号 25468 · 协议 20 · -48 dBm</span>
+      </span>
+      <span class="picker-badge green">当前</span>
+    </div>
+    <button class="picker-action-danger needs-idle" onclick="closeDevicePicker()">断开连接</button>
+  </div>
+
+  <div class="picker-section">
+    <div class="picker-section-title">附近设备</div>
+    <div class="picker-list">
+      <button class="picker-row needs-idle" onclick="closeDevicePicker()">
+        <span class="picker-icon">水</span>
+        <span class="picker-info">
+          <span class="picker-name">KLCXKJ-Water-2</span>
+          <span class="picker-meta">-62 dBm · 已识别 · 可连接</span>
+        </span>
+        <span class="picker-badge blue">可连接</span>
+      </button>
+      <button class="picker-row needs-idle" onclick="closeDevicePicker()">
+        <span class="picker-icon">?</span>
+        <span class="picker-info">
+          <span class="picker-name">未命名设备</span>
+          <span class="picker-meta">-88 dBm · 未知设备</span>
+        </span>
+        <span class="picker-badge">未知</span>
+      </button>
+    </div>
+    <button class="picker-action-outline needs-idle" onclick="closeDevicePicker()">重新扫描附近设备</button>
+  </div>
+
+  <div class="picker-manual" id="pickerManual">
+    <div class="picker-manual-title">手动输入 MAC</div>
+    <div class="picker-manual-body">
+      <input class="picker-input needs-idle" placeholder="例如 AA:BB:CC:DD:EE:FF">
+      <button class="picker-connect needs-idle" onclick="closeDevicePicker()">连接此设备</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="accountMenu" class="picker-dialog sheet-dialog account-dialog">
+  <div class="sheet-grabber"></div>
+  <div class="picker-head">
+    <div>
+      <div class="picker-eyebrow">SETTINGS</div>
+      <div class="picker-title">设置</div>
+    </div>
+    <button class="picker-close" onclick="closeAccountMenu()">×</button>
+  </div>
+  <div class="account-hero">
+    <button class="account-avatar" onclick="editAvatar()" aria-label="修改头像">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-3.9 0-7 2.2-7 5v1h14v-1c0-2.8-3.1-5-7-5Z"/></svg>
+    </button>
+    <div class="account-info">
+      <div class="account-row">
+        <span class="account-label">账号</span>
+        <span class="account-value">138 0000 0000</span>
+      </div>
+      <div class="account-row">
+        <span class="account-label">余额</span>
+        <span class="account-value">¥5.26</span>
+      </div>
+    </div>
+    <button class="account-refresh" onclick="refreshAccount()" aria-label="刷新账户">↻</button>
+  </div>
+  <div class="account-actions">
+    <button class="account-action" onclick="checkUpdate(this)">
+      <span class="account-action-text">
+        <span class="account-action-title">检查更新</span>
+        <span class="account-action-sub">当前版本 0.1919</span>
+      </span>
+      <span class="chev">›</span>
+    </button>
+    <button class="account-action" onclick="closeAccountMenu()">诊断日志<span class="chev">›</span></button>
+    <button class="account-action danger needs-idle" onclick="closeAccountMenu()">重新登录<span class="chev">›</span></button>
+  </div></dialog>
+
+<script>
+function openDevicePicker() {
+  var d = document.getElementById('devicePicker');
+  if (d && d.showModal) d.showModal();
+}
+function closeDevicePicker() {
+  var d = document.getElementById('devicePicker');
+  if (d) d.close();
+}
+function openAccountMenu() {
+  var d = document.getElementById('accountMenu');
+  if (d && d.showModal) d.showModal();
+}
+function closeAccountMenu() {
+  var d = document.getElementById('accountMenu');
+  if (d) d.close();
+}
+
+function refreshGauge() {
+  var gauge = document.querySelector('.full-gauge');
+  if (!gauge || gauge.classList.contains('is-refreshing')) return;
+  gauge.classList.add('is-refreshing');
+  if (navigator.vibrate) navigator.vibrate(8);
+  setTimeout(function() { gauge.classList.remove('is-refreshing'); }, 900);
+}
+function editAvatar() {
+  var avatar = document.querySelector('.account-avatar');
+  if (!avatar) return;
+  avatar.classList.add('is-editing');
+  setTimeout(function() { avatar.classList.remove('is-editing'); }, 600);
+}
+function refreshAccount() {
+  var btn = document.querySelector('.account-refresh');
+  if (!btn || btn.classList.contains('is-spinning')) return;
+  btn.classList.add('is-spinning');
+  setTimeout(function() { btn.classList.remove('is-spinning'); }, 900);
+}
+function checkUpdate(btn) {
+  var sub = btn ? btn.querySelector('.account-action-sub') : null;
+  if (!sub || sub.getAttribute('data-busy') === '1') return;
+  sub.setAttribute('data-busy', '1');
+  sub.textContent = '检查中…';
+  setTimeout(function() {
+    sub.textContent = '已是最新版本';
+    setTimeout(function() {
+      sub.textContent = '当前版本 0.1919';
+      sub.removeAttribute('data-busy');
+    }, 1200);
+  }, 1200);
+}
+</script><script>
+var bathStates = {
+  idle: {
+    chip: "已连接", main: "¥5.26", sub: "余额可用", meta: "",
+    deviceName: "宿舍 101", deviceSub: "KLCXKJ-Water · 设备空闲", deviceBtn: "已连接 · -48 dBm",
+    stat1k: "协议", stat1v: "20", stat2k: "水阀", stat2v: "空闲",
+    action: "开始洗澡", disabled: false
+  },
+  starting: {
+    chip: "启动中", main: "启动中", sub: "正在确认设备", meta: "",
+    deviceName: "宿舍 101", deviceSub: "正在发送开阀指令…", deviceBtn: "连接中 · 请稍候",
+    stat1k: "协议", stat1v: "20", stat2k: "水阀", stat2v: "--",
+    action: "正在启动…", disabled: true
+  },
+  bathing: {
+    chip: "供水中", main: "00:12:34", sub: "已用 ¥1.20", meta: "余额 ¥4.06",
+    deviceName: "宿舍 101", deviceSub: "水阀已开，停止后自动结算", deviceBtn: "已连接 · -48 dBm",
+    stat1k: "水流", stat1v: "正常", stat2k: "剩余", stat2v: "¥4.06",
+    action: "停止并结算", disabled: false
+  },
+  stopping: {
+    chip: "关阀中", main: "关阀中", sub: "请稍候", meta: "",
+    deviceName: "宿舍 101", deviceSub: "正在发送关阀指令…", deviceBtn: "已连接 · -48 dBm",
+    stat1k: "水流", stat1v: "--", stat2k: "结算", stat2v: "准备中",
+    action: "正在关阀…", disabled: true
+  },
+  settled: {
+    chip: "已完成", main: "¥0.80", sub: "本次消费", meta: "",
+    deviceName: "宿舍 101", deviceSub: "设备已停止，可以再次开始", deviceBtn: "已连接 · -48 dBm",
+    stat1k: "时长", stat1v: "12:34", stat2k: "余额", stat2v: "¥4.46",
+    action: "完成", disabled: false
+  },
+  error: {
+    chip: "异常", main: "异常", sub: "正在退回预扣", meta: "请稍候",
+    deviceName: "宿舍 101", deviceSub: "未确认开阀，正在回滚", deviceBtn: "已连接 · -48 dBm",
+    stat1k: "订单", stat1v: "处理中", stat2k: "余额", stat2v: "--",
+    action: "处理中…", disabled: true
+  }
+};
+function setBathState(key) {
+  var screen = document.getElementById("bathScreen");
+  if (!screen) return;
+  var s = bathStates[key] || bathStates.idle;
+  screen.dataset.state = key;
+  document.getElementById("statusText").textContent = s.chip;
+  document.getElementById("gaugeMain").textContent = s.main;
+  document.getElementById("gaugeSub").textContent = s.sub;
+  document.getElementById("gaugeMeta").textContent = s.meta;
+  document.getElementById("deviceName").textContent = s.deviceName;
+  document.getElementById("deviceSub").textContent = s.deviceSub;
+  document.getElementById("deviceBtnValue").textContent = s.deviceBtn;
+  document.getElementById("stat1Label").textContent = s.stat1k;
+  document.getElementById("stat1Value").textContent = s.stat1v;
+  document.getElementById("stat2Label").textContent = s.stat2k;
+  document.getElementById("stat2Value").textContent = s.stat2v;
+  var action = document.getElementById("mainAction");
+  action.textContent = s.action;
+  action.disabled = s.disabled;
+  var locked = (key === "starting" || key === "bathing" || key === "stopping" || key === "error");
+  var needsIdle = document.querySelectorAll(".needs-idle");
+  for (var n = 0; n < needsIdle.length; n++) {
+    needsIdle[n].disabled = locked;
+    needsIdle[n].classList.toggle("is-locked", locked);
+  }
+  var manual = document.getElementById("pickerManual");
+  if (manual) manual.classList.toggle("is-locked", locked);
+  var lockHint = document.getElementById("pickerLockHint");
+  if (lockHint) lockHint.style.display = locked ? "block" : "none";
+  var buttons = document.querySelectorAll(".state-btn");
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].classList.toggle("active", buttons[i].getAttribute("data-state") === key);
+  }
+}
+(function() {
+  var buttons = document.querySelectorAll(".state-btn");
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function() {
+      setBathState(this.getAttribute("data-state"));
+    });
+  }
+  var action = document.getElementById("mainAction");
+  if (action) {
+    action.addEventListener("click", function() {
+      var current = document.getElementById("bathScreen").dataset.state;
+      if (current === "idle") {
+        setBathState("starting");
+        setTimeout(function() { setBathState("bathing"); }, 1800);
+      } else if (current === "bathing") {
+        setBathState("stopping");
+        setTimeout(function() { setBathState("settled"); }, 1800);
+      } else if (current === "settled") {
+        setBathState("idle");
+      }
+    });
+  }
+  setBathState("idle");
+})();
+</script><script>
+(function() {
+  var switchButtons = document.querySelectorAll('.login-switch-btn');
+  var codeGroup = document.getElementById('codeGroup');
+  var pwdGroup = document.getElementById('pwdGroup');
+  var submit = document.getElementById('loginSubmit');
+  var send = document.getElementById('sendCodeBtn');
+  var phone = document.getElementById('loginPhone');
+  var code = document.getElementById('loginCode');
+  var pwd = document.getElementById('loginPwd');
+  var error = document.getElementById('loginError');
+  function activeMode() {
+    var btn = document.querySelector('.login-switch-btn.active');
+    return btn ? btn.getAttribute('data-mode') : 'code';
+  }
+  function setMode(mode) {
+    for (var i = 0; i < switchButtons.length; i++) {
+      switchButtons[i].classList.toggle('active', switchButtons[i].getAttribute('data-mode') === mode);
+    }
+    if (mode === 'pwd') {
+      codeGroup.classList.add('hidden');
+      pwdGroup.classList.remove('hidden');
+      submit.textContent = '密码登录';
+    } else {
+      codeGroup.classList.remove('hidden');
+      pwdGroup.classList.add('hidden');
+      submit.textContent = '验证码登录';
+    }
+    error.textContent = '';
+  }
+  for (var i = 0; i < switchButtons.length; i++) {
+    switchButtons[i].addEventListener('click', function() {
+      setMode(this.getAttribute('data-mode'));
+    });
+  }
+  document.getElementById('pwdToggle').addEventListener('click', function() {
+    var isPwd = pwd.type === 'password';
+    pwd.type = isPwd ? 'text' : 'password';
+    this.textContent = isPwd ? '🙈' : '👁';
+  });
+  send.addEventListener('click', function() {
+    var digits = phone.value.replace(/\D/g, '');
+    if (digits.length !== 11) {
+      error.textContent = '请输入 11 位手机号';
+      return;
+    }
+    error.textContent = '';
+    var n = 60;
+    send.disabled = true;
+    send.textContent = n + 's 后重发';
+    var timer = setInterval(function() {
+      n--;
+      if (n <= 0) {
+        clearInterval(timer);
+        send.disabled = false;
+        send.textContent = '获取验证码';
+      } else {
+        send.textContent = n + 's 后重发';
+      }
+    }, 1000);
+  });
+  submit.addEventListener('click', function() {
+    var digits = phone.value.replace(/\D/g, '');
+    if (digits.length !== 11) {
+      error.textContent = '请输入 11 位手机号';
+      return;
+    }
+    var mode = activeMode();
+    if (mode === 'code' && code.value.trim().length === 0) {
+      error.textContent = '请输入验证码';
+      return;
+    }
+    if (mode === 'pwd' && pwd.value.trim().length === 0) {
+      error.textContent = '请输入密码';
+      return;
+    }
+    error.textContent = '';
+    submit.classList.add('loading');
+    submit.textContent = '登录中…';
+    setTimeout(function() {
+      submit.classList.remove('loading');
+      submit.textContent = activeMode() === 'code' ? '验证码登录' : '密码登录';
+    }, 1500);
+  });
+  setMode('code');
+})();
+</script></body>
 </html>

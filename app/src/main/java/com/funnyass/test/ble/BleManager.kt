@@ -39,6 +39,13 @@ class BleManager(private val ctx: Context) {
         fun onStateChanged(state: Int, msg: String)
         fun onFrame(cmd: Int, payload: ByteArray)   // 收到设备回帧（二进制帧已拆好）
         fun onWriteDone(cmd: Int, success: Boolean)
+
+        /**
+         * 活动连接上的信号强度更新。
+         * 单独一个回调而不是复用 [onStateChanged]：后者带连接状态语义（state=3 会触发认连接），
+         * 用它传 RSSI 会误触发连接流程。
+         */
+        fun onRssiChanged(rssi: Int)
     }
 
     var listener: Listener? = null
@@ -60,6 +67,12 @@ class BleManager(private val ctx: Context) {
     }
 
     val isEnabled: Boolean get() = adapter?.isEnabled == true
+
+    /**
+     * 是否已有连接/连接中。自动重连前用它避让：
+     * 手动扫描或用户已触发连接时不要重复发起。
+     */
+    fun isBusy(): Boolean = gatt != null
 
     fun startScan() {
         val a = adapter ?: return
@@ -113,11 +126,58 @@ class BleManager(private val ctx: Context) {
     }
 
     fun disconnect() {
+        main.removeCallbacks(rssiPoll)
+        rssiDelays = emptyList()
         try { gatt?.disconnect() } catch (_: Exception) {}
         try { gatt?.close() } catch (_: Exception) {}
         gatt = null
         writeChar = null
         rxBuffer.reset()
+        liveRssi = null
+    }
+
+    /** 活动连接上最近一次读到的 RSSI；未连接或还没读到时为 null。 */
+    @Volatile
+    private var liveRssi: Int? = null
+
+    /** 连接建立后按多个时间点读取 RSSI 的待执行队列（毫秒）。 */
+    private var rssiDelays: List<Long> = emptyList()
+
+    private val rssiPoll = object : Runnable {
+        override fun run() {
+            readRemoteRssi()
+            rssiDelays = rssiDelays.drop(1)
+            rssiDelays.firstOrNull()?.let { main.postDelayed(this, it) }
+        }
+    }
+
+    /**
+     * 读取当前连接的 RSSI（dBm）。
+     *
+     * 自动重连不会经过扫描，`onScanResult` 的 rssi 拿不到，界面就会一直显示「信号未知」。
+     * 这里在服务发现完成后主动读一次，并缓存下来供 UI 使用。
+     */
+    fun lastRssi(): Int? = liveRssi
+
+    /**
+     * 连接建立后按多个时间点读取 RSSI。
+     *
+     * 只在服务发现完成时读一次会**明显偏低**：那一刻连接刚建立、还没稳定，
+     * 实测读到 -90，而同一台设备同一时刻的扫描值是 -48。多读几次取后续值即可对齐。
+     */
+    private fun scheduleRssiReads() {
+        main.removeCallbacks(rssiPoll)
+        rssiDelays = listOf(600L, 2_000L, 5_000L)
+        rssiDelays.firstOrNull()?.let { main.postDelayed(rssiPoll, it) }
+    }
+
+    private fun readRemoteRssi() {
+        val g = gatt ?: return
+        try {
+            g.readRemoteRssi()
+        } catch (_: Exception) {
+            // 读取失败不影响连接与业务
+        }
     }
 
     /** 发送命令：cmd + data，自动组帧并拆 20B/片写入 */
@@ -205,6 +265,8 @@ class BleManager(private val ctx: Context) {
                 @Suppress("DEPRECATION")
                 g.writeDescriptor(desc)
             }
+            // 服务就绪后按期读信号强度，供 UI 显示（自动重连没有扫描结果可复用）
+            scheduleRssiReads()
             // 等 onDescriptorWrite 成功后再发 state 3
         }
 
@@ -227,6 +289,14 @@ class BleManager(private val ctx: Context) {
             Logger.log("BLE TX result status=" + status)
             lastWriteStatus = status
             writeLatch?.countDown()
+        }
+
+        /** 缓存实时 RSSI 并通知 UI 刷新信号显示。 */
+        override fun onReadRemoteRssi(g: BluetoothGatt, rssi: Int, status: Int) {
+            if (status != BluetoothGatt.GATT_SUCCESS) return
+            liveRssi = rssi
+            Logger.log("BLE RSSI=" + rssi + " dBm")
+            main.post { listener?.onRssiChanged(rssi) }
         }
     }
 

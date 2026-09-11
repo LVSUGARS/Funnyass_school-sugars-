@@ -104,16 +104,26 @@ object Api {
     ): BaseResponse<UploadData> {
         val rn = randomNumber.lowercase()
         val data = xfData.lowercase()
+        val loginCode = ApiClient.authCode(user)
         val signParams = mapOf<String, String?>(
-            "loginCode" to ApiClient.authCode(user),
+            "loginCode" to loginCode,
             "telephone" to user.telephone,
             "xfData" to data
         )
+        val signature = Crypto.signNative(loginCode, signParams)
+        // 170 表示签名值与请求体不一致；两者一致时的 226 来自后续消费数据校验。
+        Logger.log("upload sign input=" + signParams.keys.sorted().joinToString("") { it + (signParams[it] ?: "") })
+        Logger.log(
+            "upload sign fields=" + signParams.keys.sorted().joinToString(",") +
+                " loginCodeLen=" + loginCode.length + " xfDataLen=" + data.length +
+                " telephone=" + (user.telephone ?: "") + " rn=" + rn + " protocol=" + protocolType
+        )
+        Logger.log("upload signature=" + signature)
         val params = mutableMapOf(
             "protocolType" to protocolType,
             "randomNumber" to rn,
             "xfData" to data,
-            "signature" to Crypto.signNative(ApiClient.authCode(user), signParams)
+            "signature" to signature
         )
         if (accountId != 0) params["accountId"] = accountId.toString()
         if (upMoney != 0) params["upMoney"] = upMoney.toString()

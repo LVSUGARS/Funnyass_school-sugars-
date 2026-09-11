@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 描边胶囊按钮底（危险/次要按钮共用）：surface 实色 + 1dp apple_line 边 + 999dp 圆角，
+     按下时叠一层极淡的按压反馈。契约 5.3 固定命名。 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#1F000000">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/apple_surface" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/apple_line" />
+            <corners android:radius="999dp" />
+        </shape>
+    </item>
+</ripple>

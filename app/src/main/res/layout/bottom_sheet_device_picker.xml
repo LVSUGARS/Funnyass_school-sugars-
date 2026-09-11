@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  设备选择底部弹窗（契约 5.1 / apple-design-preview.html 行 781-837）
+  由 activity_bath.xml 的 FrameLayout 用 <include> 引入并贴底显示：
+    - 根布局只给 match_parent x wrap_content，不写 layout_gravity / 高度上限
+    - 所有 id 会被合并进宿主视图树，BathActivity 直接 findViewById 可取
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_apple_sheet_rounded_top"
+    android:orientation="vertical">
+
+    <!-- 抓手（HTML .sheet-grabber） -->
+    <View
+        android:layout_width="38dp"
+        android:layout_height="5dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_apple_grabber" />
+
+    <!-- 头部：眉标 + 标题 + 关闭 ×；固定在滚动区之外，保证始终可见 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="top"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.16"
+                android:text="DEVICE CONTROL"
+                android:textColor="@color/apple_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="选择洗澡设备"
+                android:textColor="@color/apple_text"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/picker_close"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_apple_secondary_btn"
+            android:clickable="true"
+            android:contentDescription="关闭"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="×"
+            android:textColor="@color/apple_secondary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 锁定提示：默认 gone，由 BathActivity 在用水/结算时显示 -->
+    <TextView
+        android:id="@+id/picker_lock_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_apple_pill_amber"
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="10dp"
+        android:text="当前正在用水或结算，暂不能更换或断开设备"
+        android:textColor="@color/apple_amber"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!-- 滚动区：设备弹窗内容较长，小屏靠这里滚动，根布局始终 wrap_content 不超屏 -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingStart="20dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ===== 当前设备 ===== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:letterSpacing="0.04"
+                android:text="当前设备"
+                android:textColor="@color/apple_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_apple_block"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_apple_icon_circle_blue"
+                    android:gravity="center"
+                    android:text="水"
+                    android:textColor="@color/apple_blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/picker_current_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="--"
+                        android:textColor="@color/apple_text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/picker_current_meta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="未连接"
+                        android:textColor="@color/apple_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/device_mac"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="MAC --"
+                        android:textColor="@color/apple_secondary"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="编号 "
+                            android:textColor="@color/apple_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/device_id_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/apple_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" · 协议 "
+                            android:textColor="@color/apple_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/protocol_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/apple_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" · "
+                            android:textColor="@color/apple_secondary"
+                            android:textSize="12sp" />
+
+                        <!--
+                          这里原来硬编码了设计稿占位文字 "-48 dBm"，但代码从未设置过它，
+                          于是界面上会一直挂着一个假的信号值，与真实读数并排显示、
+                          看起来像同一台设备有两个信号（实测 "-94 dBm" 与 "-48 dBm" 同时出现）。
+                          信号已由上方状态行统一展示，这里不再重复。
+                          保留节点是为了不改变既有布局结构（间距/换行）。
+                        -->
+                        <TextView
+                            android:id="@+id/picker_current_signal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textColor="@color/apple_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_apple_pill_green"
+                    android:paddingStart="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="3dp"
+                    android:text="当前"
+                    android:textColor="@color/apple_green"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 用 TextView 而非 MaterialButton：MaterialButton 会强制使用自身填充背景，
+                 会把这里的描边 drawable 覆盖成整块蓝底，导致红字看不清。 -->
+            <TextView
+                android:id="@+id/disconnect_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_apple_danger_btn"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="断开连接"
+                android:textColor="@color/apple_red"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- ===== 附近设备 ===== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:letterSpacing="0.04"
+                android:text="附近设备"
+                android:textColor="@color/apple_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_apple_block">
+
+                <ListView
+                    android:id="@+id/device_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:divider="@color/apple_line"
+                    android:dividerHeight="1dp"
+                    android:fadeScrollbars="false"
+                    android:nestedScrollingEnabled="true"
+                    android:overScrollMode="ifContentScrolls"
+                    android:scrollbars="vertical" />
+
+                <TextView
+                    android:id="@+id/device_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="暂无可用设备"
+                    android:textColor="@color/apple_secondary"
+                    android:textSize="13sp" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/scan_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_apple_secondary_btn"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="重新扫描附近设备"
+                android:textColor="@color/apple_blue"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- HTML uses a collapsed details element for manual MAC entry. -->
+            <TextView
+                android:id="@+id/picker_manual_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:letterSpacing="0.04"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="手动输入 MAC  ›"
+                android:textColor="@color/apple_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/picker_manual_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/mac_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_apple_input_field"
+                    android:hint="例如 AA:BB:CC:DD:EE:FF"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/apple_text"
+                    android:textColorHint="@color/apple_secondary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/connect_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="连接此设备"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/apple_blue"
+                    app:cornerRadius="25dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

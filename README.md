@@ -1,6 +1,7 @@
 # 睿智校园
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://www.mozilla.org/MPL/2.0/)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Status: Testing](https://img.shields.io/badge/status-testing-orange.svg)
 
 > 先向大家道歉：这个项目全部都是 **Vibe Coding**。因为我自己的编程能力实在有限，代码质量和实现方式可能不够成熟，欢迎大家提交 Issue、帮助测试和改进。
@@ -15,35 +16,46 @@
 
 ## 当前状态
 
-当前测试版本为 **0.1919**。项目目前仍在测试中，可能存在不稳定、设备不兼容、接口变更或异常计费等风险。请先小范围测试，并在确认设备状态后再开始使用。
+当前版本为 **1.0.0**（完整改动记录见 [`docs/CHANGELOG.md`](docs/CHANGELOG.md)）。项目仍在测试中，可能存在不稳定、设备不兼容、接口变更或异常计费等风险。请先小范围测试，并在确认设备状态后再开始使用。
 
-当前已实现：
+### 已实现
 
-- 手机号验证码或密码登录。
-- 查询校园账户余额。
-- 扫描并连接附近的 `KLCXKJ-Water` 蓝牙水控设备。
-- 开始供水、停止供水和消费记录结算。
-- 防重复下单、启动失败预扣回滚及关阀超时重试。
-- 登录凭据失效检测和手动重新登录。
-- MIUIX 风格的精简界面，无广告模块。
+- 手机号 **验证码或密码** 登录，登录态本地持久化。
+- 查询校园账户余额，**小数位与服务端返回精度一致**（不做四舍五入）。
+- 扫描并连接附近的 `KLCXKJ-Water` 蓝牙水控设备；**记住上次设备并在启动后自动重连**。
+- 开始供水、停止供水；关阀后自动尝试上传消费记录。
+- 界面展示设备真实状态（空闲 / 使用中 / 不可中断 / 有遗留数据），避免误操作他人设备。
+- **使用记录**：每次用水结束后记录时间、时长与花费（花费取服务端余额差值）。
+- **全屏诊断日志**：便于反馈问题时导出排查信息。
+- **检查更新**：从 GitHub Releases 自动比对最新版本，发现新版本可一键跳转下载。
+- 登录凭据失效检测与手动重新登录。
+- Apple / MIUIX 风格精简界面，**无广告模块**。
 
-暂未提供：
+### 暂未提供
 
 - 充值功能。
 - 微信小程序版本。
 
-以上两项正在积极适配中。
+## 计费说明（重要）
+
+本客户端**不参与计费**，只负责三件事：**发送开闸/关闸指令、读取余额、展示状态**。
+
+扣费由趣智校园**服务端按实际用水量自动完成**，客户端不存在预扣模型。
+因此客户端上传消费记录失败（服务端返回加密校验类错误）**不影响实际扣费**，
+只会让本次记录少一条对账数据；关阀后余额仍以服务端为准。
 
 ## 使用方法
 
-1. 从 GitHub Releases 下载并安装最新 APK。
+1. 从 [GitHub Releases](https://github.com/LVSUGARS/Funnyass_school-sugars-/releases) 下载并安装最新 APK。
 2. 打开“睿智校园”，使用校园账户登录。
 3. 按系统提示授予蓝牙或“附近的设备”权限，并确保蓝牙已开启。
-4. 点击扫描，在附近设备中寻找名称为 `KLCXKJ-Water` 的设备。它通常是宿舍附近的淋浴水控器；如果同时出现多个设备，请结合距离、信号强度和页面显示的房间信息确认，不要操作不属于自己的设备。
-5. 点击对应设备完成连接。等待页面显示“空闲（可开始）”后，再点击“开始洗澡”。
-6. 使用结束后点击“停止供水”，并等待页面提示关阀和结算完成。
-
-登录和余额查询均使用趣智校园官方服务接口。本项目不会搭建、代理或保存独立的校园账户服务，但登录凭据会保存在 Android 应用私有存储中，用于调用相关接口。
+4. 进入「蓝牙设备」，点击 **重新扫描附近设备**，在列表中找到目标水控器；
+   可结合房间名、编号与信号强度确认，**不要操作不属于自己的设备**。
+5. 点选设备完成连接。设备显示 **空闲** 后，点击「开始洗澡」。
+6. 使用结束后点击「停止并结算」。设备会先关阀，随后尝试上传消费记录；
+   即使记录同步失败，本次用水也已结束，余额会在关阀后刷新。
+7. 下次打开 App 会自动重连上次使用的设备；如需更换或放弃，
+   在设备列表里选择其他设备（会自动切换）或点「断开连接」。
 
 ## 构建
 
@@ -52,22 +64,61 @@
 Windows：
 
 ```powershell
-.\gradlew.bat :app:assembleDebug
+.\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
 ```
 
 macOS / Linux：
 
 ```bash
-./gradlew :app:assembleDebug
+./gradlew :app:testDebugUnitTest :app:assembleDebug
 ```
 
-当前版本的 APK 默认输出到：
+APK 默认输出到：
 
 ```text
 app/build/outputs/apk/debug/睿智校园-<版本号>.apk
 ```
 
-最低支持 Android 7.0（API 24）。当前 APK 仅包含 `arm64-v8a` 所需的原生库，因此其他 CPU 架构可能无法正常运行。
+最低支持 Android 7.0（API 24）。当前 APK 仅包含 `arm64-v8a` 原生库，其他 CPU 架构可能无法正常运行。
+
+### 发布新版本
+
+发布前请同步版本号（**四处**，缺一会出现界面与包内版本不一致）：
+
+1. `app/build.gradle.kts` 的 `versionCode`（整数，递增）与 `versionName`
+2. `BathActivity.APP_VERSION`
+3. `res/layout/bottom_sheet_settings.xml` 的「当前版本」
+4. `androidTest/.../BathUiSmokeTest.kt` 的版本断言
+
+然后在 GitHub 打 tag 并上传 APK：
+
+```bash
+gh release create v1.0.0 "app/build/outputs/apk/debug/睿智校园-1.0.0.apk" \
+  --repo LVSUGARS/Funnyass_school-sugars- --title "v1.0.0" --notes "更新说明"
+```
+
+App 内「检查更新」读取的是 `releases/latest` 的 `tag_name`，
+因此 **tag 必须写成 `v1.0.0` 这种形式**（可带 `v` 前缀），并且要把 `.apk` 作为 Release 资源上传。
+
+## 项目结构
+
+```text
+app/src/main/java/com/funnyass/test/
+├── ui/          BathActivity（主界面/仪表盘/设备列表/设置与子页面）、LoginActivity
+├── ble/         BleManager（扫描、连接、收发帧、RSSI）
+├── net/         Api / ApiClient（接口与签名）
+├── store/       Session（登录态）、UsageLog（使用记录）
+├── update/      UpdateChecker（GitHub Releases 版本比对）
+└── util/        FrameUtils（协议组帧/解析）、Crypto、Logger
+```
+
+调试用命令端口（debug 包自动开启，监听 `127.0.0.1:8080`）：
+
+```bash
+adb forward tcp:8080 tcp:8080
+curl "http://127.0.0.1:8080/log"          # 读日志
+curl "http://127.0.0.1:8080/cmd?action=connect&mac=<MAC>"
+```
 
 ## 隐私与安全
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 账户区浅底容器：中性底 18dp 圆角（对应 HTML .account-block） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/apple_neutral_tint" />
+    <corners android:radius="18dp" />
+</shape>

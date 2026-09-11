@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    返回箭头。原始路径在 24 宽画布上左偏（可用范围约 8..18），直接放进 48dp
+    触控区会贴着左边框，所以整体右移 3 个 viewport 单位让视觉居中。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <group android:translateX="3">
+        <path
+            android:fillColor="@color/apple_text"
+            android:pathData="M15.41,7.41 14,6l-6,6 6,6 1.41,-1.41L10.83,12z" />
+    </group>
+</vector>
