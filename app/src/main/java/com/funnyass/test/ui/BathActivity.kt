@@ -377,11 +377,15 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         }
 
         // ---- 按压反馈与点击接线 -------------------------------------------
-        // 这里同时完成「按压动画」与「点击行为」两件事，放在一处便于核对。
-        // 顺序要求：attach 先于 setOnClickListener——这样松开时 isPressed 仍然准确，
-        // 手指滑出控件再松开不会误触发（旋转动画依赖这个判断）。
-        PressFeedback.attach(settingsBtn) { PressFeedback.spinOnce(settingsBtn) }
-        settingsBtn.setOnClickListener { showSettingsSheet() }
+        // attach 只负责缩放；旋转等附加动作挂在点击回调上。
+        // 早先把旋转放在 withEndAction + isPressed 里，真机上缩放生效但旋转始终不触发。
+        PressFeedback.attach(settingsBtn)
+        settingsBtn.setOnClickListener {
+            PressFeedback.spinOnce(settingsBtn)
+            // 设置弹窗从底部弹出、会盖住右上角齿轮，所以让旋转先转一下再打开弹窗，
+            // 否则动画被弹窗挡住，看起来就像"没转"。
+            opHandler.postDelayed({ showSettingsSheet() }, SPIN_LEAD_MS)
+        }
 
         PressFeedback.attach(deviceEntryBtn)
         deviceEntryBtn.setOnClickListener { showDevicePicker() }
@@ -2290,7 +2294,7 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     }
 
     companion object {
-        private const val APP_VERSION = "1.0.4"
+        private const val APP_VERSION = "1.0.5"
 
         internal fun resolveGaugeState(
             connected: Boolean,
@@ -2376,6 +2380,8 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         private const val KEY_PENDING_DATE = "pending_consume_date"
         private const val KEY_PENDING_MAC = "pending_mac"
         private const val REQ_PICK_AVATAR = 202
+        /** 点设置后延迟多久打开弹窗：留出时间让齿轮先转，避免被弹窗盖住。 */
+        private const val SPIN_LEAD_MS = 260L
         private const val START_ACK_TIMEOUT_MS = 6_000L
         private const val START_VERIFY_TIMEOUT_MS = 3_000L
         private const val STOP_ACK_TIMEOUT_MS = 1_600L

@@ -1,8 +1,5 @@
 package com.funnyass.test.ui
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -21,22 +18,18 @@ internal object PressFeedback {
     private const val PRESS_MS = 90L
     private const val RELEASE_MS = 130L
 
-    /** 记录每个 View 上一次旋转的角度，使齿轮每次点击都能接着转。 */
-    private val rotationCache = HashMap<View, Float>()
-
-    /** 正在旋转的 View，用于忽略连点（不同 API 版本判断动画进行中的方式不一致，自己记最稳）。 */
+    /** 正在旋转的 View，用于忽略连点。 */
     private val spinning = HashSet<View>()
 
     /**
      * 给按钮加「按下去缩小、松开弹回」的效果。
      *
-     * **必须在 `setOnClickListener` 之前调用**，这样 `isPressed` 仍然准确：
-     * 手指滑出控件范围再松开时，`performClick()` 不会触发，而 `isPressed` 会是 false，
-     * 于是这次不会播放旋转动画——避免"滚动列表时误触发"。
-     *
-     * @param onPressed 按下（回弹完成）后执行的动作，例如齿轮旋转
+     * 只管缩放，**不在这里做旋转之类的附加动作**：
+     * 早先版本把旋转挂在 `withEndAction` + `isPressed` 上，真机上缩放正常但旋转始终不触发
+     * （`ViewPropertyAnimator.withEndAction` 在触摸手势期间并不可靠）。
+     * 现在附加动作交给 `setOnClickListener`——它本身就只在有效点击时触发，更可靠。
      */
-    fun attach(view: View, onPressed: (() -> Unit)? = null) {
+    fun attach(view: View) {
         view.setOnTouchListener { v, event ->
             // 灰掉的按钮不该有按压反馈
             if (!v.isEnabled) return@setOnTouchListener false
@@ -51,17 +44,11 @@ internal object PressFeedback {
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    val up = event.actionMasked == MotionEvent.ACTION_UP
                     v.animate()
                         .scaleX(1f).scaleY(1f)
                         .setDuration(RELEASE_MS)
                         .setInterpolator(OvershootInterpolator(2f))
-                        .withEndAction {
-                            Logger.log("press up id=" + v.id + " isPressed=" + v.isPressed + " hasAction=" + (onPressed != null))
-                            if (onPressed != null && v.isPressed) onPressed()
-                        }
                         .start()
-                    Logger.log("press release id=" + v.id + " up=" + up)
                 }
             }
             false // 不消费事件，点击/长按等原有逻辑继续正常工作
@@ -69,28 +56,28 @@ internal object PressFeedback {
     }
 
     /**
-     * 齿轮旋转：每次点击在原有角度上继续转一圈，避免每次都从 0 重来。
-     * 旋转进行中时忽略后续点击，连点不会叠加。
+     * 齿轮旋转：每次点击转一圈。
+     *
+     * 用 `ViewPropertyAnimator.rotationBy`（与缩放同一套机制，实测可靠），
+     * 而不是 `ObjectAnimator`——后者在触摸手势期间曾出现完全不生效的情况。
+     * `rotationBy` 基于当前角度累加，因此天然接着上次继续转，不需要缓存角度。
+     * 旋转进行中忽略连点，避免请求排队。
      */
-    fun spinOnce(view: View, turns: Float = 1f) {
+    fun spinOnce(view: View) {
         if (!spinning.add(view)) {
             Logger.log("spin 跳过：正在旋转中")
             return
         }
-        val from = rotationCache[view] ?: 0f
-        val to = from + 360f * turns
-        Logger.log("spin 开始 from=$from to=$to")
-        ObjectAnimator.ofFloat(view, View.ROTATION, from, to).apply {
-            duration = 520L
-            interpolator = DecelerateInterpolator()
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    rotationCache[view] = to
-                    spinning.remove(view)
-                }
-            })
-            start()
-        }
+        Logger.log("spin 开始 rotation=" + view.rotation)
+        view.animate()
+            .rotationBy(360f)
+            .setDuration(420L)
+            .setInterpolator(DecelerateInterpolator())
+            .withEndAction {
+                spinning.remove(view)
+                Logger.log("spin 结束 rotation=" + view.rotation)
+            }
+            .start()
     }
 }
 
