@@ -260,19 +260,11 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         renderConnection()
         applySheetLock()
 
-        connectBtn.setOnClickListener {
-            val m = macInput.text.toString().trim()
-            if (m.isNotEmpty()) connectDevice(m)
-        }
-        scanBtn.setOnClickListener { scanDevices() }
-        startBtn.setOnClickListener { onMainAction() }
-        stopBtn.setOnClickListener { onMainAction() }
-        disconnectBtn.setOnClickListener { disconnectDev() }
-        reloginBtn.setOnClickListener { requestRelogin() }
+        // 底部按钮与设置按钮的点击 + 按压反馈统一在 setupAppleInteractions() 里接线
         advancedToggle.visibility = View.VISIBLE
         usagePage.visibility = View.GONE
         diagnosticsPage.visibility = View.GONE
-        hideSheets()
+        hideSheets(animate = false)
 
         // 系统返回键：先关全屏子页面，再走默认行为
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -378,13 +370,43 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         // 原因：扫描会先断开当前连接（beginScan 里的 ble.disconnect），
         // 于是用户一打开列表，自动连接好的设备就变成「未连接」。
         // 需要找新设备时，由列表里的「扫描」按钮显式触发。
-        deviceEntryBtn.setOnClickListener { showDevicePicker() }
         pickerManualToggle.setOnClickListener {
             val expanded = pickerManualBody.visibility == View.VISIBLE
             pickerManualBody.visibility = if (expanded) View.GONE else View.VISIBLE
             pickerManualToggle.text = if (expanded) "手动输入 MAC  ›" else "手动输入 MAC  ‹"
         }
+
+        // ---- 按压反馈与点击接线 -------------------------------------------
+        // 这里同时完成「按压动画」与「点击行为」两件事，放在一处便于核对。
+        // 顺序要求：attach 先于 setOnClickListener——这样松开时 isPressed 仍然准确，
+        // 手指滑出控件再松开不会误触发（旋转动画依赖这个判断）。
+        PressFeedback.attach(settingsBtn) { PressFeedback.spinOnce(settingsBtn) }
         settingsBtn.setOnClickListener { showSettingsSheet() }
+
+        PressFeedback.attach(deviceEntryBtn)
+        deviceEntryBtn.setOnClickListener { showDevicePicker() }
+
+        PressFeedback.attach(startBtn)
+        startBtn.setOnClickListener { onMainAction() }
+
+        PressFeedback.attach(stopBtn)
+        stopBtn.setOnClickListener { onMainAction() }
+
+        PressFeedback.attach(connectBtn)
+        connectBtn.setOnClickListener {
+            val m = macInput.text.toString().trim()
+            if (m.isNotEmpty()) connectDevice(m)
+        }
+
+        PressFeedback.attach(scanBtn)
+        scanBtn.setOnClickListener { scanDevices() }
+
+        PressFeedback.attach(disconnectBtn)
+        disconnectBtn.setOnClickListener { disconnectDev() }
+
+        PressFeedback.attach(reloginBtn)
+        reloginBtn.setOnClickListener { requestRelogin() }
+
         pickerClose.setOnClickListener { hideDevicePicker() }
         settingsClose.setOnClickListener { hideSettingsSheet() }
         sheetScrim.setOnClickListener { hideSheets() }
@@ -451,19 +473,30 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
 
     // ==================== 全屏子页面（使用记录 / 诊断日志）====================
 
-    /** 打开使用记录全屏页；设置 sheet 与遮罩一起收起，返回时再恢复设置页。 */
+    /** 打开使用记录全屏页；设置 sheet 收起，返回时再恢复设置页。 */
     private fun showUsagePage() {
         if (!this::usagePage.isInitialized) return
-        hideSheets()
+        prepareForSubPage()
         renderUsageLog()
         usagePage.visibility = View.VISIBLE
     }
 
     private fun showDiagnosticsPage() {
         if (!this::diagnosticsPage.isInitialized) return
-        hideSheets()
+        prepareForSubPage()
         syncLogText()
         diagnosticsPage.visibility = View.VISIBLE
+    }
+
+    /**
+     * 进入全屏子页面前的准备：立即收起设置 sheet，但**保留遮罩**。
+     *
+     * 子页面是不透明的全屏层，遮罩被盖在下面看不见；如果这里把遮罩也隐藏了，
+     * 返回设置页时它就得重新淡入，会闪一下。
+     */
+    private fun prepareForSubPage() {
+        if (this::settingsSheet.isInitialized) settingsSheet.visibility = View.GONE
+        if (this::pickerSheet.isInitialized) pickerSheet.visibility = View.GONE
     }
 
     /** 从全屏页返回设置页（保持设置 sheet 打开，避免用户再点一次齿轮）。 */
@@ -473,10 +506,21 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         showSettingsSheet()
     }
 
-    private fun hideSheets() {
-        if (this::pickerSheet.isInitialized) pickerSheet.visibility = View.GONE
-        if (this::settingsSheet.isInitialized) settingsSheet.visibility = View.GONE
-        if (this::sheetScrim.isInitialized) sheetScrim.visibility = View.GONE
+    /**
+     * 收起所有 sheet。
+     * 带 [animate] = false 时立即隐藏：用于「A 换成 B」的场景，
+     * 否则旧弹窗的缩回动画会和新弹窗的弹出动画叠在一起，看起来乱。
+     */
+    private fun hideSheets(animate: Boolean = true) {
+        if (this::pickerSheet.isInitialized) {
+            if (animate) SheetAnim.hide(pickerSheet) else pickerSheet.visibility = View.GONE
+        }
+        if (this::settingsSheet.isInitialized) {
+            if (animate) SheetAnim.hide(settingsSheet) else settingsSheet.visibility = View.GONE
+        }
+        if (this::sheetScrim.isInitialized) {
+            if (animate) SheetAnim.fadeOut(sheetScrim) else sheetScrim.visibility = View.GONE
+        }
         // 子页面是全屏覆盖层，收起 sheet 时一并收起，避免残留
         if (this::usagePage.isInitialized) usagePage.visibility = View.GONE
         if (this::diagnosticsPage.isInitialized) diagnosticsPage.visibility = View.GONE
@@ -488,18 +532,28 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
 
     private fun showDevicePicker() {
         if (!this::pickerSheet.isInitialized || !this::sheetScrim.isInitialized) return
-        if (this::settingsSheet.isInitialized) settingsSheet.visibility = View.GONE
-        sheetScrim.visibility = View.VISIBLE
-        pickerSheet.visibility = View.VISIBLE
+        finishSubSheets()
+        SheetAnim.fadeIn(sheetScrim)
+        SheetAnim.show(pickerSheet)
         constrainSheetHeight(pickerSheet)
         renderPickerCurrent()
         applySheetLock()
     }
 
+    /** 弹窗进场前，把另一个 sheet 直接隐藏掉（不播放缩回动画）。 */
+    private fun finishSubSheets() {
+        if (this::pickerSheet.isInitialized && pickerSheet.visibility == View.VISIBLE) {
+            pickerSheet.visibility = View.GONE
+        }
+        if (this::settingsSheet.isInitialized && settingsSheet.visibility == View.VISIBLE) {
+            settingsSheet.visibility = View.GONE
+        }
+    }
+
     private fun hideDevicePicker() {
         if (!this::pickerSheet.isInitialized) return
-        pickerSheet.visibility = View.GONE
-        if (this::sheetScrim.isInitialized) sheetScrim.visibility = View.GONE
+        SheetAnim.hide(pickerSheet)
+        if (this::sheetScrim.isInitialized) SheetAnim.fadeOut(sheetScrim)
     }
 
     private fun showSettingsSheet() {
@@ -507,8 +561,8 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         if (this::pickerSheet.isInitialized) pickerSheet.visibility = View.GONE
         renderSettings()
         syncLogText()
-        sheetScrim.visibility = View.VISIBLE
-        settingsSheet.visibility = View.VISIBLE
+        SheetAnim.fadeIn(sheetScrim)
+        SheetAnim.show(settingsSheet)
         constrainSheetHeight(settingsSheet)
     }
 
@@ -523,8 +577,8 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
 
     private fun hideSettingsSheet() {
         if (!this::settingsSheet.isInitialized) return
-        settingsSheet.visibility = View.GONE
-        if (this::sheetScrim.isInitialized) sheetScrim.visibility = View.GONE
+        SheetAnim.hide(settingsSheet)
+        if (this::sheetScrim.isInitialized) SheetAnim.fadeOut(sheetScrim)
     }
 
     private fun renderPickerCurrent() {
@@ -2236,7 +2290,7 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     }
 
     companion object {
-        private const val APP_VERSION = "1.0.2"
+        private const val APP_VERSION = "1.0.3"
 
         internal fun resolveGaugeState(
             connected: Boolean,
