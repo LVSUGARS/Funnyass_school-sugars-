@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FileProvider 可暴露的路径。
+  应用内更新把 APK 下载到外部私有目录（getExternalFilesDir(DOWNLOADS)），
+  再通过 content:// 交给系统安装器；同时也声明 cache 目录作为兜底。
+-->
+<paths>
+    <external-files-path
+        name="updates"
+        path="Download/" />
+    <cache-path
+        name="updates_cache"
+        path="updates/" />
+</paths>

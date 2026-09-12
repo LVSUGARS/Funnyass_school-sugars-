@@ -24,7 +24,38 @@
 
 ## 版本历史
 
-### 1.0.5 — 修复齿轮旋转（当前版本）
+### 1.0.6 — 更新改为应用内下载安装（当前版本）
+
+**反馈**：点「检查更新」跳到浏览器后，**下载到 100% 卡住，装不上**。
+
+**根因**：工程里从来没有下载/安装相关配置——没有 `REQUEST_INSTALL_PACKAGES` 权限，
+也没有 FileProvider。App 只能把 APK 链接丢给浏览器，而 Android 10+ 要求
+**浏览器自己**持有「安装未知应用」权限；很多浏览器没有该权限，表现就是
+下载完成后无法拉起安装器、静默卡住。
+
+**改法**：新增 `update/UpdateInstaller.kt`，把整个更新流程收进应用内。
+
+- **下载**：`DownloadManager` 写入外部私有目录（`getExternalFilesDir(DOWNLOADS)`）。
+  注意 `DownloadManager` **不接受应用内部目录**作为目标，早先写 `cacheDir` 会抛异常。
+- **进度**：轮询 `DownloadManager.query()`（每 400ms），版本行实时显示「下载中 42%」。
+  刻意不用 `ACTION_DOWNLOAD_COMPLETE` 广播——Android 13+ 注册系统广播需要指定
+  `RECEIVER_EXPORTED`/`RECEIVER_NOT_EXPORTED`，写错会运行时报错，轮询更稳。
+- **安装**：下载完成后经 `FileProvider` 以 `content://` 交给系统安装器
+  （Android 7.0 起直接传 `file://` 会抛 `FileUriExposedException`）。
+- **权限**：安装前先检查本应用的「安装未知应用」权限，
+  没有就直接跳到该应用的授权页，而不是让安装静默失败。
+
+**配套改动**：
+
+- Manifest 增加 `REQUEST_INSTALL_PACKAGES` 权限与 `FileProvider` 声明
+- 新增 `res/xml/file_paths.xml`（声明 `external-files-path Download/` 与兜底的 cache 路径）
+- 版本行文案：检查中 / 发现新版本 / 下载中 N% / 下载完成正在安装 / 已是最新
+
+> 状态：构建通过、37 项单测通过。真机安装流程待确认。
+
+---
+
+### 1.0.5 — 修复齿轮旋转
 
 **反馈**：1.0.3 的设置齿轮**有缩放但不旋转**。
 

@@ -48,6 +48,7 @@ import com.funnyass.test.net.ApiClient
 import com.funnyass.test.store.Session
 import com.funnyass.test.store.UsageLog
 import com.funnyass.test.update.UpdateChecker
+import com.funnyass.test.update.UpdateInstaller
 import com.klcxkj.jni.JniUtils
 
 @SuppressLint("MissingPermission")
@@ -151,9 +152,11 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     private var walletAtStartYuan = Double.NaN
 
     // ---- 更新检查 ----
-    /** 已发现的新版本；非空时版本行可点击跳转下载页。 */
+    /** 已发现的新版本；非空时版本行可点击，点击后在应用内下载并安装。 */
     private var pendingUpdate: UpdateChecker.Result.Newer? = null
     private var checkingUpdate = false
+    /** 正在应用内下载更新包。 */
+    private var updateDownloading = false
 
     // ---- 使用记录（仅展示，不参与计费）----
     /** 本次用水结束时间；0 表示本次还没收尾，用于避免重复写记录。 */
@@ -613,8 +616,8 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
         val phone = user?.telephone?.trim().orEmpty()
         settingsPhoneTv.text = phone.ifBlank { "--" }
         settingsWalletTv.text = walletDisplay()
-        // 有"发现新版本"提示时不要覆盖它，否则用户永远看不到更新入口
-        if (pendingUpdate == null && !checkingUpdate) {
+        // 下载中 / 有"发现新版本"提示时不要覆盖，否则用户看不到进度或更新入口
+        if (pendingUpdate == null && !checkingUpdate && !updateDownloading) {
             settingsVersionTv.text = "当前版本 " + APP_VERSION
             restoreVersionColor()
         }
@@ -623,22 +626,17 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     /**
      * 检查更新：从 GitHub Releases 拉最新 tag 与当前版本比较。
      *
-     * 发现新版本时，版本行会变成可点击的「发现新版本 vX.Y.Z」，再点一次即打开 Release 页面。
+     * 发现新版本后，版本行变成可点的「发现新版本 x.y.z，点此更新」，
+     * 再点一次即**在应用内下载并拉起系统安装器**（不再跳浏览器）。
      */
     private fun checkUpdate() {
         if (!this::settingsVersionTv.isInitialized) return
-        // 已有可用更新时，这一下点击用于打开下载页
         val pending = pendingUpdate
         if (pending != null) {
-            val url = pending.apkUrl ?: pending.pageUrl
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            } catch (_: Exception) {
-                toast("未找到可用的浏览器")
-            }
+            startInAppUpdate(pending)
             return
         }
-        if (checkingUpdate) return
+        if (checkingUpdate || updateDownloading) return
 
         checkingUpdate = true
         settingsVersionTv.text = "检查中…"
@@ -678,6 +676,81 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
                 }
             }
         }.start()
+    }
+
+    /**
+     * 应用内下载更新包，完成后拉起系统安装器。
+     *
+     * 之前是 `ACTION_VIEW` 交给浏览器，但在 Android 10+ 上浏览器需要**自己**持有
+     * 「安装未知应用」权限，很多浏览器没有，表现就是下载到 100% 后卡住无法安装。
+     */
+    private fun startInAppUpdate(pending: UpdateChecker.Result.Newer) {
+        val apkUrl = pending.apkUrl
+        if (apkUrl.isNullOrBlank()) {
+            // Release 里没有 .apk 资源，只能去网页
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pending.pageUrl)))
+            } catch (_: Exception) {
+                toast("未找到可用的浏览器")
+            }
+            return
+        }
+
+        updateDownloading = true
+        settingsVersionTv.text = "开始下载…"
+        settingsVersionTv.setTextColor(ContextCompat.getColor(this, R.color.apple_blue))
+
+        UpdateInstaller.start(
+            context = this,
+            apkUrl = apkUrl,
+            version = pending.version,
+            listener = object : UpdateInstaller.Listener {
+                override fun onProgress(progress: Int) {
+                    runOnUiThread {
+                        if (!this@BathActivity::settingsVersionTv.isInitialized) return@runOnUiThread
+                        settingsVersionTv.text =
+                            if (progress < 0) "下载中…" else "下载中 " + progress + "%"
+                    }
+                }
+
+                override fun onReadyToInstall() {
+                    runOnUiThread {
+                        updateDownloading = false
+                        if (this@BathActivity::settingsVersionTv.isInitialized) {
+                            settingsVersionTv.text = "下载完成，正在安装…"
+                        }
+                        if (!UpdateInstaller.install(this@BathActivity, pending.version)) {
+                            // 已自动跳到「安装未知应用」设置页，这里补一句说明
+                            toast("请在设置中允许本应用安装应用，然后重新点击更新")
+                            if (this@BathActivity::settingsVersionTv.isInitialized) {
+                                settingsVersionTv.text =
+                                    "发现新版本 " + pending.version + "，点此更新"
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailed(message: String) {
+                    runOnUiThread {
+                        updateDownloading = false
+                        if (this@BathActivity::settingsVersionTv.isInitialized) {
+                            settingsVersionTv.text = message
+                            restoreVersionColor()
+                        }
+                        toast(message)
+                        opHandler.postDelayed({
+                            if (this@BathActivity::settingsVersionTv.isInitialized) {
+                                settingsVersionTv.text =
+                                    "发现新版本 " + pending.version + "，点此更新"
+                                settingsVersionTv.setTextColor(
+                                    ContextCompat.getColor(this@BathActivity, R.color.apple_blue)
+                                )
+                            }
+                        }, 2_000L)
+                    }
+                }
+            }
+        )
     }
 
     private fun restoreVersionColor() {
@@ -2294,7 +2367,7 @@ class BathActivity : AppCompatActivity(), BleManager.Listener, CmdServer.Command
     }
 
     companion object {
-        private const val APP_VERSION = "1.0.5"
+        private const val APP_VERSION = "1.0.6"
 
         internal fun resolveGaugeState(
             connected: Boolean,

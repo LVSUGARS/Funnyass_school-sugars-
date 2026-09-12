@@ -226,7 +226,7 @@
                         android:layout_marginTop="2dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-            android:text="当前版本 1.0.5"
+            android:text="当前版本 1.0.6"
                         android:textColor="@color/apple_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
