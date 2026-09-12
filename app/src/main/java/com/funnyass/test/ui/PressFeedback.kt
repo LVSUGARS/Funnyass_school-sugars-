@@ -35,7 +35,6 @@ internal object PressFeedback {
             if (!v.isEnabled) return@setOnTouchListener false
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    Logger.log("press down " + v.id)
                     v.animate()
                         .scaleX(PRESSED_SCALE).scaleY(PRESSED_SCALE)
                         .setDuration(PRESS_MS)

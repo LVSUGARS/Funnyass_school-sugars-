@@ -1,7 +1,7 @@
 # 睿智校园
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://www.mozilla.org/MPL/2.0/)
-![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.7-blue.svg)
 ![Status: Testing](https://img.shields.io/badge/status-testing-orange.svg)
 
 趣智校园的第三方精简客户端，只做三件事：**连上宿舍的蓝牙水控、开阀关阀、看余额**。
@@ -46,7 +46,7 @@ fork 之后的工作以 **DeepSeek V4.1 Flash** 为主，**GPT-5.6 Sol** 为辅
 
 ## 当前状态
 
-当前版本 **1.0.2**，改动记录见 [`docs/CHANGELOG.md`](docs/CHANGELOG.md)。
+当前版本 **1.0.7**，改动记录见 [`docs/CHANGELOG.md`](docs/CHANGELOG.md)。
 仍在测试中，可能存在不稳定、设备不兼容、接口变更等问题，建议先小范围试用。
 
 ### 已实现
