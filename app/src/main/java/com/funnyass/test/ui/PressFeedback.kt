@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import com.funnyass.test.Logger
 
 /**
  * 按键按压反馈与弹窗进出动画。
@@ -40,21 +41,27 @@ internal object PressFeedback {
             // 灰掉的按钮不该有按压反馈
             if (!v.isEnabled) return@setOnTouchListener false
             when (event.actionMasked) {
-                MotionEvent.ACTION_DOWN -> v.animate()
-                    .scaleX(PRESSED_SCALE).scaleY(PRESSED_SCALE)
-                    .setDuration(PRESS_MS)
-                    .setInterpolator(DecelerateInterpolator())
-                    .start()
+                MotionEvent.ACTION_DOWN -> {
+                    Logger.log("press down " + v.id)
+                    v.animate()
+                        .scaleX(PRESSED_SCALE).scaleY(PRESSED_SCALE)
+                        .setDuration(PRESS_MS)
+                        .setInterpolator(DecelerateInterpolator())
+                        .start()
+                }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    val up = event.actionMasked == MotionEvent.ACTION_UP
                     v.animate()
                         .scaleX(1f).scaleY(1f)
                         .setDuration(RELEASE_MS)
                         .setInterpolator(OvershootInterpolator(2f))
                         .withEndAction {
+                            Logger.log("press up id=" + v.id + " isPressed=" + v.isPressed + " hasAction=" + (onPressed != null))
                             if (onPressed != null && v.isPressed) onPressed()
                         }
                         .start()
+                    Logger.log("press release id=" + v.id + " up=" + up)
                 }
             }
             false // 不消费事件，点击/长按等原有逻辑继续正常工作
@@ -66,9 +73,13 @@ internal object PressFeedback {
      * 旋转进行中时忽略后续点击，连点不会叠加。
      */
     fun spinOnce(view: View, turns: Float = 1f) {
-        if (!spinning.add(view)) return
+        if (!spinning.add(view)) {
+            Logger.log("spin 跳过：正在旋转中")
+            return
+        }
         val from = rotationCache[view] ?: 0f
         val to = from + 360f * turns
+        Logger.log("spin 开始 from=$from to=$to")
         ObjectAnimator.ofFloat(view, View.ROTATION, from, to).apply {
             duration = 520L
             interpolator = DecelerateInterpolator()

@@ -24,7 +24,42 @@
 
 ## 版本历史
 
-### 1.0.3 — 交互动效（当前版本）
+### 1.0.4 — 齿轮旋转问题的诊断日志（当前版本）
+
+**背景**：1.0.3 的交互动效在真机上「设置齿轮没有转动」。代码逐行核对没找到问题
+（`ObjectAnimator` + `View.ROTATION` 是标准写法；`setupAppleInteractions()` 确实在
+`onCreate` 中执行；`settings_btn` 全工程只有一处），因此加日志定位，而不是继续猜着改。
+
+**改动**：`PressFeedback` 在按压链路的关键节点打日志：
+
+```text
+press down <id>                                  手指按下
+press release id=... up=true                     手指抬起
+press up id=... isPressed=... hasAction=...      回弹结束、回调是否执行
+spin 开始 from=... to=...                         旋转真正开始
+spin 跳过：正在旋转中                              连点被忽略
+```
+
+**怎么用**：装上后点一下设置齿轮，然后
+
+```bash
+adb logcat -d | grep -E "press|spin"
+```
+
+四种断点对应关系：
+
+| 日志表现 | 说明 |
+|---|---|
+| 一条都没有 | 触摸事件没到 `settings_btn`（被上层视图拦截） |
+| 有 `release` 但没有 `press up` | `withEndAction` 被中断 |
+| `isPressed=false` | 按压状态被长按/滑动逻辑清除 |
+| `spin 跳过：正在旋转中` | `spinning` 未清理 |
+
+**状态**：齿轮旋转问题**尚未定位**，待真机日志。
+
+---
+
+### 1.0.3 — 交互动效
 
 新增 `ui/PressFeedback.kt`，两组可复用的动画工具，都不参与任何业务判断。
 

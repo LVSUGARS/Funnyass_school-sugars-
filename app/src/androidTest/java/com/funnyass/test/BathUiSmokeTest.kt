@@ -161,7 +161,7 @@ class BathUiSmokeTest {
                 assertTrue(
                     "设置页应显示版本号",
                     activity.findViewById<android.widget.TextView>(R.id.settings_version)
-                    .text.toString().contains("1.0.3")
+                    .text.toString().contains("1.0.4")
                 )
                 }
             }
